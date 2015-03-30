@@ -53,7 +53,9 @@ This unique help you to configure your environment:
   Please copy/paste your access_token: db19c01e-18e5-4fc2-8b81-7b3d1f44533b
   $ 
 
-You could explore all options by typing::
+You could explore all options by typing:
+
+.. parsed-literal::
   $ angusme --help
 
 
