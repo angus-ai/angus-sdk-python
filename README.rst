@@ -64,3 +64,7 @@ You can discuss Angus SDK on `the Angus SDK developer mailing list <http://group
 
 This web site and all documentation is licensed under `Creative
 Commons 3.0 <http://creativecommons.org/licenses/by/3.0/>`_.
+
+Angus Python SDK is Angus.ai open source technologies It is available under the `Apache License, Version 2.0. <https://www.apache.org/licenses/LICENSE-2.0.html>`_. Please read LICENSE and NOTICE files for more information.
+
+Copyright 2015, Angus.ai
