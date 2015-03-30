@@ -1,0 +1,154 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+import argparse
+import json
+import os
+import shutil
+import sys
+
+__updated__ = "2015-03-30"
+__author__ = "Aurélien Moreau"
+__copyright__ = "Copyright 2015, Angus.ai"
+__credits__ = ["Aurélien Moreau", "Gwennael Gate"]
+__license__ = "Apache v2.0"
+__maintainer__ = "Aurélien Moreau"
+__status__ = "Production"
+
+ANGUS_PATH = '~/.angusdk'
+
+CERTIF = """-----BEGIN CERTIFICATE-----
+MIIFJTCCA42gAwIBAgIJAIUJ72W0oQSEMA0GCSqGSIb3DQEBCwUAMIGZMQswCQYD
+VQQGEwJGUjEOMAwGA1UECAwFUGFyaXMxDjAMBgNVBAcMBVBhcmlzMREwDwYDVQQK
+DAhBbmd1cy5BSTEOMAwGA1UECwwFQ2xvdWQxGjAYBgNVBAMMEWdhdGUuYW5ndXNh
+cGkuY29tMSswKQYJKoZIhvcNAQkBFhxhdXJlbGllbi5tb3JlYXVAeWllbnlpZW4u
+bmV0MB4XDTE1MDMxODEwMzUwNloXDTE3MDMxNzEwMzUwNlowgZkxCzAJBgNVBAYT
+AkZSMQ4wDAYDVQQIDAVQYXJpczEOMAwGA1UEBwwFUGFyaXMxETAPBgNVBAoMCEFu
+Z3VzLkFJMQ4wDAYDVQQLDAVDbG91ZDEaMBgGA1UEAwwRZ2F0ZS5hbmd1c2FwaS5j
+b20xKzApBgkqhkiG9w0BCQEWHGF1cmVsaWVuLm1vcmVhdUB5aWVueWllbi5uZXQw
+ggGiMA0GCSqGSIb3DQEBAQUAA4IBjwAwggGKAoIBgQDDMEMm1i3fAUzabepe3INN
+1bzl6uqTdnGRwy6gw3pQIQs7pnMVaQ2XHbkjB84f9IvRnnBXQCVm4BSEV/jadRjZ
+W7xydqb5rCJo4LkgdYiOxy0ycFpggoWdqX3HrrcZ6R/M7gonSfvw89H/NV/bw7ZO
+BRshGzWfpzUIRUQabrGbDBUTLiEXzgLTRUmOlYWCOdEIqZO6krlNN3NVRflArWY0
+RRKpvxRgJBTzNpJ5i5fyJ3MUWtdyt5JL99/tLT/wcUNhwz4K8CP8l0IOXP1lnpBX
+jO6Xc7NVAL/kNJyEuMHFkQy0saWjDH90GjB6ScZ3DpWo8Ah5jjXIoiYEWOMdmgsh
+dpMvm+x7gZIRA+N9afPkQ32ggvgH/PZkCv0X0HABLE2pd2UnAT3f/6wHb9r3Wgg8
+GR78uIBP3vfWD1AMc+BDgkOEG+TwCCk6FK2bXpxGV/zNtVZe3XTDDAi5vWnptuxA
+zpbSvEY8s+4UKzORdXmxyUaG06KiUju4ePVIhBQazl8CAwEAAaNuMGwwHAYDVR0R
+BBUwE4IRZ2F0ZS5hbmd1c2FwaS5jb20wHQYDVR0OBBYEFHuWW9wpD8okzB1Gi5XE
+NovLax6JMB8GA1UdIwQYMBaAFHuWW9wpD8okzB1Gi5XENovLax6JMAwGA1UdEwQF
+MAMBAf8wDQYJKoZIhvcNAQELBQADggGBAHYFDOYYUx/j34AYJLUhbtF/sK2fdT/N
+QxfHICzaReXg85CxlnoWuixMMC9qPzXmNI0GpRiM48aIGyfksavFAPWa5TqSSbDH
+3v9LlJ6uYKeOk6uZXgNZzha0UOKB60KufRuRItSJ3fkUZ5yrXfFP+j2bnaxKqBxH
+tBzExc6XkzZcR7HFiYORShPJ4LYMuyH1mz7vRhi/vFanav00suVY/V6las5lVAQo
+M+bVx7wupGx2SWoNl2SgnmrFzKB06FpFqL0pSZtQTw7szOCyWP2rD7m7hC9U9696
+3+A3ZwSJmOYae+bY14/avlzPDQIPFbp6qDSncOileyBupZzheyYgeeOcxPr1sPbA
+NyBue5dbMTw5hTGITPdhhaAKc6ovNjdoVpOPewk4BH4GwdkKxaNQOBsHORQ6w7eo
+RaeHdcMP5yo6WKhFnLBgx3TQjReyayin5vbC4lOH4yK9JXXvKboJWrb5s82TWSCN
+TQb9q3LkrPzpP61llmcjxhrXqHaLJsG0RQ==
+-----END CERTIFICATE-----
+"""
+
+CONFIRMATION = "Your angus configuration directory (%s) already exists, " \
+    "do you want regenerate it (y/N) ?"
+
+SUCCESS = "Configuration directory successfully created in (%s), " \
+    "credentials can be modified there directly"
+
+ANGUS_FULL_PATH = os.path.expanduser(ANGUS_PATH)
+CERTIF_NAME = ''
+
+
+def create_configuration():
+    if not os.path.exists(ANGUS_FULL_PATH):
+        os.makedirs(ANGUS_FULL_PATH)
+    else:
+        response = raw_input(
+            CONFIRMATION % (ANGUS_FULL_PATH))
+        if not response == "y":
+            show_configuration()
+            sys.exit(0)
+
+    ca_path = os.path.join(ANGUS_FULL_PATH, 'certificate.pem')
+
+    with open(ca_path, 'w') as f:
+        f.write(CERTIF)
+
+    client_id = raw_input("Please copy/paste your client_id: ")
+    access_token = raw_input("Please copy/paste your access_token: ")
+
+    conf_path = os.path.join(ANGUS_FULL_PATH, 'config.json')
+
+    with open(conf_path, 'w') as f:
+        f.write(json.dumps({
+            'client_id': client_id,
+            'access_token': access_token,
+            'ca_path': ca_path,
+            'default_root': 'https://gate.angusapi.com',
+        }, indent=True))
+        f.flush()
+        print SUCCESS % (ANGUS_FULL_PATH)
+
+
+def show_configuration():
+    if not os.path.exists(ANGUS_FULL_PATH):
+        print "No angus configuration"
+        return
+
+    print "Python version:"
+    print(sys.version)
+
+    with open(os.path.join(ANGUS_FULL_PATH, 'certificate.pem'), 'r') as f:
+        print "My authorize certificate:"
+        print f.read()
+
+    with open(os.path.join(ANGUS_FULL_PATH, 'config.json'), 'r') as f:
+        print "My configuration:"
+        print f.read()
+
+
+def delete_configuration():
+    if os.path.exists(ANGUS_FULL_PATH):
+        shutil.rmtree(ANGUS_FULL_PATH, ignore_errors=True)
+
+
+def main():
+    formattter_class = argparse.RawDescriptionHelpFormatter
+
+    parser = argparse.ArgumentParser(description='Angus SDK configurator.',
+                                     formatter_class=formattter_class)
+
+    parser.add_argument('-s', '--show', action='store_true',
+                        help='display current configuration if exits')
+
+    parser.add_argument('-d', '--delete', action='store_true',
+                        help='remove current configuration if exists')
+
+    args = parser.parse_args(sys.argv[1:])
+
+    if args.show:
+        show_configuration()
+    elif args.delete:
+        delete_configuration()
+    else:
+        create_configuration()
+
+if __name__ == '__main__':
+    main()

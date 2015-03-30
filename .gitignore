@@ -1,0 +1,15 @@
+# Python binaries
+*.pyc
+
+# Eclipse meta data
+.project
+.pydevproject
+.settings
+
+# Python bundle
+*.egg-info
+build
+dist
+
+# Backup files
+*~
