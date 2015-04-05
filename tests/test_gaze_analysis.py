@@ -165,5 +165,5 @@ def test_local_upload_file(service):
         async=False)
     check_result_res_eventually(result_res)
 
-# TODO: Make a test with attachment but with a file:// in content
-# TODO: Faire un test ou il n'y a pas de callback'
+# TODO: Add a test with attachment but with a file:// in content
+# TODO: Add a test with no callback
