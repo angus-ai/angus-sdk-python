@@ -67,7 +67,7 @@ Go further
 Discussion and support
 ----------------------
 
-You can discuss Angus SDK on `the Angus SDK developer mailing list <http://groups.google.com/group/angus-sdk-python>`_, and report bugs on the `GitHub issue tracker <https://github.com/angus-ai/angus-sdk-python/issues>`_.
+You can discuss Angus SDK on `the Angus SDK developer mailing list <https://groups.google.com/d/forum/angus-sdk-python-dev>`_, and report bugs on the `GitHub issue tracker <https://github.com/angus-ai/angus-sdk-python/issues>`_.
 
 This web site and all documentation is licensed under `Creative
 Commons 3.0 <http://creativecommons.org/licenses/by/3.0/>`_.
