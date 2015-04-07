@@ -28,7 +28,7 @@ import angus
 import angus.cloud
 
 __version__ = "0.0.3"
-__updated__ = "2015-03-30"
+__updated__ = "2015-04-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -65,7 +65,6 @@ def parse_cmd_line(argv):
                         help='path to a trusted ca bundle.')
 
     parser.add_argument('-r', '--root', metavar='root', type=str,
-                        default='https://gate.angusapi.com',
                         help='the angus gate url')
 
     parser.add_argument('--version', action='version',
