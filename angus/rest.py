@@ -26,7 +26,7 @@ import uuid
 import requests
 
 
-__updated__ = "2015-03-30"
+__updated__ = "2015-04-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -40,7 +40,6 @@ class Configuration(requests.Session):
     def __init__(self):
         super(Configuration, self).__init__()
         self.auth = None
-        self.verify = None
         self.default_root = None
 
     def set_credential(self, client_id, access_token):
