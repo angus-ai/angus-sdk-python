@@ -28,7 +28,7 @@ __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
 setup(name='angus-sdk-python',
-      version="0.0.3",
+      version="0.0.4",
       description='Angus python SDK',
       author=__author__,
       author_email='aurelien.moreau@yienyien.net',

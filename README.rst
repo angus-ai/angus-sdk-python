@@ -16,12 +16,12 @@ source distribution includes demo applications that are not present
 when Angus SDK is installed in this way, so you may wish to download a
 copy of the source tarball as well.
 
-**Manual installation**: Download `here <https://pypi.python.org/packages/source/a/angus-sdk-python/angus-sdk-python-0.0.3.tar.gz>`_
+**Manual installation**: Download `here <https://pypi.python.org/packages/source/a/angus-sdk-python/angus-sdk-python-0.0.4.tar.gz>`_
 
 .. parsed-literal::
 
-   tar xvfz angus-sdk-python-0.0.3.tar.gz
-   cd angus-sdk-python-0.0.3
+   tar xvfz angus-sdk-python-0.0.4.tar.gz
+   cd angus-sdk-python-0.0.4
    python setup.py build
    sudo python setup.py install
 

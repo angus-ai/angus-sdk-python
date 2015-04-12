@@ -27,7 +27,7 @@ import sys
 import angus
 import angus.cloud
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 __updated__ = "2015-04-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
