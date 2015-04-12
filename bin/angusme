@@ -221,7 +221,7 @@ def create_configuration():
             'client_id': client_id,
             'access_token': access_token,
             'ca_path': ca_path,
-            'default_root': 'https://gate.angusapi.com',
+            'default_root': 'https://gate.angus.ai',
         }, indent=True))
         f.flush()
         print SUCCESS % (ANGUS_FULL_PATH)
