@@ -24,7 +24,7 @@ import os
 import shutil
 import sys
 
-__updated__ = "2015-04-07"
+__updated__ = "2015-04-12"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -197,6 +197,9 @@ CERTIF_NAME = ''
 
 
 def create_configuration():
+    conf_path = os.path.join(ANGUS_FULL_PATH, 'config.json')
+    ca_path = os.path.join(ANGUS_FULL_PATH, 'certificate.pem')
+
     if not os.path.exists(ANGUS_FULL_PATH):
         os.makedirs(ANGUS_FULL_PATH)
     else:
@@ -205,16 +208,24 @@ def create_configuration():
         if not response == "y":
             show_configuration()
             sys.exit(0)
-
-    ca_path = os.path.join(ANGUS_FULL_PATH, 'certificate.pem')
+        with open(conf_path, 'r') as f:
+            conf = json.loads(f.read())
+            client_id = conf['client_id']
+            access_token = conf['access_token']
 
     with open(ca_path, 'w') as f:
         f.write(CERTIF)
 
-    client_id = raw_input("Please copy/paste your client_id: ")
-    access_token = raw_input("Please copy/paste your access_token: ")
-
-    conf_path = os.path.join(ANGUS_FULL_PATH, 'config.json')
+    r = raw_input(
+        "Please copy/paste your client_id (current: %s): " %
+        (client_id))
+    if r != "":
+        client_id = r
+    r = raw_input(
+        "Please copy/paste your access_token(current: %s): " %
+        (access_token))
+    if r != "":
+        access_token = r
 
     with open(conf_path, 'w') as f:
         f.write(json.dumps({
