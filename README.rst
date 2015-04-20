@@ -3,7 +3,7 @@ Angus Python SDK's documentation
 
 Angus Python SDK is a python client library for `Angus.ai <http://www.angus.ai>`_ Cloud.
 
-Instalation
+Installation
 -----------
 
 **Automatic installation**::
