@@ -1,5 +1,5 @@
 Angus.ai Python SDK
-Copyright 2015 Angus.ai
+Copyright 2015 Angus.ai (http://www.angus.ai)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,3 +16,6 @@ limitations under the License.
 This product includes software developed at
 Angus.ai (http://www.angus.ai/).
 
+Contributors:
+	Aurélien Moreau
+	Gwennaël Gâté
