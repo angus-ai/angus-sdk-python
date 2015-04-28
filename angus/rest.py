@@ -26,7 +26,7 @@ import uuid
 import requests
 
 
-__updated__ = "2015-04-07"
+__updated__ = "2015-04-28"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -83,7 +83,7 @@ def generate_encoder(attachments):
         def default(self, o):
             if isinstance(o, Resource):
                 return o.endpoint
-            if isinstance(o, file):
+            if hasattr(o, 'read'):
                 file_name = unicode(uuid.uuid1())
                 field_name = "attachment://%s" % (file_name)
                 attachments.append(
