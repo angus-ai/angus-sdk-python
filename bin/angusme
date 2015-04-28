@@ -24,7 +24,7 @@ import os
 import shutil
 import sys
 
-__updated__ = "2015-04-12"
+__updated__ = "2015-04-28"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -200,6 +200,9 @@ def create_configuration():
     conf_path = os.path.join(ANGUS_FULL_PATH, 'config.json')
     ca_path = os.path.join(ANGUS_FULL_PATH, 'certificate.pem')
 
+    client_id = None
+    access_token = None
+
     if not os.path.exists(ANGUS_FULL_PATH):
         os.makedirs(ANGUS_FULL_PATH)
     else:
@@ -208,10 +211,12 @@ def create_configuration():
         if not response == "y":
             show_configuration()
             sys.exit(0)
-        with open(conf_path, 'r') as f:
-            conf = json.loads(f.read())
-            client_id = conf['client_id']
-            access_token = conf['access_token']
+
+        if os.path.exists(conf_path):
+            with open(conf_path, 'r') as f:
+                conf = json.loads(f.read())
+                client_id = conf.get('client_id', None)
+                access_token = conf.get('access_token', None)
 
     with open(ca_path, 'w') as f:
         f.write(CERTIF)
@@ -239,6 +244,9 @@ def create_configuration():
 
 
 def show_configuration():
+    conf_path = os.path.join(ANGUS_FULL_PATH, 'config.json')
+    ca_path = os.path.join(ANGUS_FULL_PATH, 'certificate.pem')
+
     if not os.path.exists(ANGUS_FULL_PATH):
         print "No angus configuration"
         return
@@ -246,13 +254,19 @@ def show_configuration():
     print "Python version:"
     print(sys.version)
 
-    with open(os.path.join(ANGUS_FULL_PATH, 'certificate.pem'), 'r') as f:
-        print "My authorize certificate:"
-        print f.read()
+    print "My authorize certificate:"
+    if os.path.exists(ca_path):
+        with open(ca_path, 'r') as f:
+            print f.read()
+    else:
+        print "\tWarning!!!, no certificate file"
 
-    with open(os.path.join(ANGUS_FULL_PATH, 'config.json'), 'r') as f:
-        print "My configuration:"
-        print f.read()
+    print "My configuration:"
+    if os.path.exists(conf_path):
+        with open(conf_path, 'r') as f:
+            print f.read()
+    else:
+        print "\tWarning!!!, no configuration file"
 
 
 def delete_configuration():
