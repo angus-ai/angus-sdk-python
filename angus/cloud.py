@@ -17,10 +17,14 @@
 # specific language governing permissions and limitations
 # under the License.
 
+
+import copy
+import json
+
 from angus import rest
 import angus
 
-__updated__ = "2015-06-01"
+__updated__ = "2015-06-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -36,6 +40,72 @@ class BlobDirectory(rest.Collection):
             parameters={'content': binary})
 
 
+def generate_encoder(root):
+    class Encoder(json.JSONEncoder):
+
+        def default(self, o):
+            if isinstance(o, rest.Resource):
+                return o.endpoint
+            if hasattr(o, 'read'):
+                res = root.blobs.create(o)
+                return res.endpoint
+            return json.JSONEncoder.default(self, o)
+    return Encoder
+
+
+class CompositeService(rest.Resource):
+
+    def __init__(self, *args, **kwargs):
+        self.services = kwargs.pop("services")
+        super(CompositeService, self).__init__(*args, **kwargs)
+        self.root = Root(conf=self.conf)
+
+    def process(self, parameters, async=False, callback=None):
+        if parameters is None:
+            parameters = {}
+        else:
+            parameters = copy.copy(parameters)
+
+        parameters['async'] = async
+
+        attachments = []
+
+        data = json.dumps(parameters, cls=generate_encoder(self.root))
+
+        futures = []
+        for service in self.services:
+            if attachments:
+                files = attachments + \
+                    [('meta', (None, data, 'application/json'))]
+                r = self.conf.post(service.jobs.endpoint, files=files)
+            else:
+                headers = {'content-type': 'application/json'}
+                r = self.conf.post(
+                    service.jobs.endpoint,
+                    data=data,
+                    headers=headers)
+            futures.append((service.name, r))
+
+        result = {}
+        for (name, r) in futures:
+            r = r.result()
+            if r.status_code < 400:
+                result[name] = r.json()
+
+        result = {
+            "status": 200,
+            "composite": result,
+        }
+
+        job = rest.Job(
+            self.endpoint, "", representation=result, conf=self.conf)
+
+        if job.status == rest.Resource.CREATED and callback:
+            callback(job)
+
+        return job
+
+
 class ServiceDirectory(rest.Collection):
 
     def get_service(self, name, version, service_class=rest.Service):
@@ -49,6 +119,26 @@ class ServiceDirectory(rest.Collection):
             conf=self.conf)
         service = generic_service.get_service(version, service_class)
         return service
+
+    def get_services(self, services=None):
+        description = self.list({})
+        description = description['services']
+        if services is None:
+            services = description
+
+        cservices = []
+        for name in services:
+            if isinstance(name, tuple):
+                version = name[1]
+                name = name[0]
+            else:
+                version = None
+
+            service = self.get_service(name, version)
+            cservices.append(service)
+
+        return CompositeService(
+            "memory:///", "composite", services=cservices, conf=self.conf)
 
 
 class Root(rest.Resource):

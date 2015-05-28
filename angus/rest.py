@@ -23,11 +23,12 @@ import json
 import uuid
 
 import requests
+import requests_futures.sessions
 
 from six.moves.urllib import parse as urlparse
 
 
-__updated__ = "2015-05-31"
+__updated__ = "2015-06-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -36,10 +37,10 @@ __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
 
-class Configuration(requests.Session):
+class Configuration(requests_futures.sessions.FuturesSession):
 
     def __init__(self):
-        super(Configuration, self).__init__()
+        super(Configuration, self).__init__(max_workers=10)
         self.auth = None
         self.default_root = None
 
@@ -113,6 +114,7 @@ class Collection(Resource):
             headers = {'content-type': 'application/json'}
             r = self.conf.post(self.endpoint, data=data, headers=headers)
 
+        r = r.result()
         r.raise_for_status()
 
         result = r.json()
@@ -122,6 +124,7 @@ class Collection(Resource):
     def list(self, filters):
         r = self.conf.get(self.endpoint, params=filters)
 
+        r = r.result()
         r.raise_for_status()
 
         result = r.json()

@@ -19,7 +19,7 @@
 # under the License.
 from setuptools import setup, find_packages
 
-__updated__ = "2015-05-31"
+__updated__ = "2015-06-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennaël Gâté"]
@@ -38,6 +38,7 @@ setup(name='angus-sdk-python',
           "argparse==1.2.1",
           "pytest==2.6.4",
           "six",
+          "requests-futures",
       ],
       license=__license__,
       packages=find_packages(exclude=['tests']),
