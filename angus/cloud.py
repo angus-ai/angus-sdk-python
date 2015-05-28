@@ -149,6 +149,8 @@ class Root(rest.Resource):
 
         if url is None:
             url = conf.default_root
+        else:
+            conf.default_root = url
 
         if url is None:
             raise Exception("Root url must be provided, please run angusme, "
