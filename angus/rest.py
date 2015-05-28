@@ -175,10 +175,15 @@ class GenericService(Collection):
     def __init__(self, *args, **kargs):
         super(GenericService, self).__init__(*args, **kargs)
 
-    def get_service(self, version, service_class=Service):
+    def get_service(self, version=None, service_class=Service):
         description = self.list({'version': version})
         description = description['versions']
-        description = description[str(version)]
+
+        if version is None:
+            description = max(description.items())[1]
+        else:
+            description = description[str(version)]
+
         return service_class(self.endpoint, description['url'],
                              conf=self.conf)
 

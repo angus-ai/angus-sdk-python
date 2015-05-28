@@ -108,7 +108,7 @@ class CompositeService(rest.Resource):
 
 class ServiceDirectory(rest.Collection):
 
-    def get_service(self, name, version, service_class=rest.Service):
+    def get_service(self, name, version=None, service_class=rest.Service):
         description = self.list({'name': name})
         description = description['services']
         description = description[name]
