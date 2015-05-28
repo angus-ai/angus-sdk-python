@@ -22,13 +22,15 @@ import argparse
 import json
 import logging
 import os
+import pkgutil
 import sys
 
 import angus
 import angus.cloud
 
+
 __version__ = "0.0.5"
-__updated__ = "2015-04-07"
+__updated__ = "2015-05-28"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -37,6 +39,8 @@ __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
 logger = logging.getLogger('AnguSDK')
+
+__path__ = pkgutil.extend_path(__path__, __name__)
 
 
 def parse_cmd_line(argv):
