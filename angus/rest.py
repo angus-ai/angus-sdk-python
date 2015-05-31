@@ -20,13 +20,14 @@
 
 import copy
 import json
-import urlparse
 import uuid
 
 import requests
 
+from six.moves.urllib import parse as urlparse
 
-__updated__ = "2015-04-28"
+
+__updated__ = "2015-05-31"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -84,7 +85,7 @@ def generate_encoder(attachments):
             if isinstance(o, Resource):
                 return o.endpoint
             if hasattr(o, 'read'):
-                file_name = unicode(uuid.uuid1())
+                file_name = str(uuid.uuid1())
                 field_name = "attachment://%s" % (file_name)
                 attachments.append(
                     (field_name, (file_name, o, "application/octet-stream")))
@@ -174,7 +175,7 @@ class GenericService(Collection):
     def get_service(self, version, service_class=Service):
         description = self.list({'version': version})
         description = description['versions']
-        description = description[unicode(version)]
+        description = description[str(version)]
         return service_class(self.endpoint, description['url'],
                              conf=self.conf)
 

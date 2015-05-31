@@ -27,7 +27,7 @@ import angus.cloud
 import angus.rest
 
 
-__updated__ = "2015-04-05"
+__updated__ = "2015-05-31"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -50,7 +50,7 @@ def service(root):
 
 @pytest.fixture(scope="module")
 def image_res(root):
-    return root.blobs.create(open(SND_1))
+    return root.blobs.create(open(SND_1, 'rb'))
 
 
 def check_result_res(result_res, where=None):
@@ -75,7 +75,7 @@ def check_result_res_eventually(result_res, where=None):
 def test_embeded_sync(service):
     result_res = service.process(
         parameters={
-            'sound': open(SND_1)},
+            'sound': open(SND_1, 'rb')},
         callback=check_result_res,
         async=False)
     check_result_res_eventually(result_res)
@@ -93,7 +93,7 @@ def test_href_sync(service, image_res):
 def test_embeded_async(service):
     result_res = service.process(
         parameters={
-            'sound': open(SND_1)},
+            'sound': open(SND_1, 'rb')},
         callback=check_result_res,
         async=True)
     assert result_res.status == angus.rest.Resource.ACCEPTED

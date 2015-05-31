@@ -27,7 +27,7 @@ import angus.cloud
 import angus.rest
 
 
-__updated__ = "2015-04-05"
+__updated__ = "2015-05-31"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -52,12 +52,12 @@ def service(root):
 
 @pytest.fixture(scope="module")
 def image_res(root):
-    return root.blobs.create(open(IMG_1))
+    return root.blobs.create(open(IMG_1, 'rb'))
 
 
 @pytest.fixture(scope="module")
 def image_res_3(root):
-    return root.blobs.create(open(IMG_3))
+    return root.blobs.create(open(IMG_3, 'rb'))
 
 
 def check_result_res(result_res, howmany=1):
@@ -92,7 +92,7 @@ def test_connect():
 def test_embeded_sync(service):
     result_res = service.process(
         parameters={
-            'image': open(IMG_1)},
+            'image': open(IMG_1, 'rb')},
         callback=check_result_res,
         async=False)
     check_result_res_eventually(result_res)
@@ -101,7 +101,7 @@ def test_embeded_sync(service):
 def test_embeded_default(service):
     result_res = service.process(
         parameters={
-            'image': open(IMG_1)},
+            'image': open(IMG_1, 'rb')},
         callback=check_result_res)
     check_result_res(result_res)
 
@@ -109,7 +109,7 @@ def test_embeded_default(service):
 def test_embeded_sync_3(service):
     result_res = service.process(
         parameters={
-            'image': open(IMG_3)},
+            'image': open(IMG_3, 'rb')},
         callback=lambda x: check_result_res(x, 3), async=False)
     check_result_res_eventually(result_res, 3)
 
@@ -126,7 +126,7 @@ def test_href_sync(service, image_res):
 def test_embeded_async(service):
     result_res = service.process(
         parameters={
-            'image': open(IMG_1)},
+            'image': open(IMG_1, 'rb')},
         callback=check_result_res,
         async=True)
     assert result_res.status == angus.rest.Resource.ACCEPTED
@@ -137,7 +137,7 @@ def test_embeded_async(service):
 def test_embeded_async_large(service):
     result_res = service.process(
         parameters={
-            'image': open(IMG_LARGE)},
+            'image': open(IMG_LARGE, 'rb')},
         callback=lambda x: check_result_res(x, 43),
         async=True)
     # Upload large file to force async computing

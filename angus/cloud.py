@@ -17,8 +17,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from angus import rest
 import angus
-import rest
 
 __updated__ = "2015-06-01"
 __author__ = "Aurélien Moreau"
