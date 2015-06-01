@@ -110,7 +110,10 @@ class ServiceDirectory(rest.Collection):
     def get_service(self, name, version=None, service_class=rest.Service):
         description = self.list({'name': name})
         description = description['services']
-        description = description[name]
+        if name in description:
+            description = description[name]
+        else:
+            raise Exception("No such service")
 
         generic_service = rest.GenericService(
             self.endpoint,
