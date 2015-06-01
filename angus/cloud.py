@@ -18,10 +18,9 @@
 # under the License.
 
 import angus
-
 import rest
 
-__updated__ = "2015-03-30"
+__updated__ = "2015-06-01"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -60,6 +59,10 @@ class Root(rest.Resource):
 
         if url is None:
             url = conf.default_root
+
+        if url is None:
+            raise Exception("Root url must be provided, please run angusme, "
+                            "or define the url as argument.")
 
         super(Root, self).__init__(None, url, conf=conf)
         self.blobs = BlobDirectory(self.endpoint, 'blobs', conf=self.conf)
