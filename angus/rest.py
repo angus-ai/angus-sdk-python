@@ -75,6 +75,7 @@ class Resource(object):
 
     def fetch(self):
         r = self.conf.get(self.endpoint)
+        r = r.result()
         r.raise_for_status()
         self.representation = r.json()
 
