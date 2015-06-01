@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Angus Python SDK's documentation!
-===================================
+=================================
 
 Angus Python SDK is a python client library for Angus.ai Cloud.
 
@@ -46,22 +46,98 @@ The Angus SDK source code is `hosted on GitHub <https://github.com/angus-ai/angu
 
 **Platforms**: Angus SDK can be use on any platform.
 
-Documentation
--------------
+Quickstart
+----------
 
-Contents:
+Connect to a angus.ai cloud
++++++++++++++++++++++++++++
 
-.. toctree::
-   :maxdepth: 2
-	      
-   guide
-   general
-   face_detection
-   sound_localization
+Angus.ai provides a "resource oriented" API, each asset is represented as a
+resource. It enables a good RESTful architecture.
+But to increase usability, the SDK provides some wrappers for a more conventional
+style. For example, to "connect" to the cloud, in a pure RESTful way, the SDK
+provide a resource ``Root`` and you create a resource very easy like this:
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. code-block:: python
+
+   myconf = Configuration()
+   myconf.set_ca_path("/home/username/.angusdk/certificate.pem")
+   myconf.set_credential("7f5933d2-cd7c-11e4-9fe6-490467a5e114",
+                         "db19c01e-18e5-4fc2-8b81-7b3d1f44533b")
+   root = Root(url="https://gate.angus.ai", conf=myconf)
+
+If you are initialized your environment thanks to angusme, the resource ``Root``
+find the default configuration:
+
+.. code-block:: python
+
+   root = Root()
+
+If you prefer a more programatic style, the SDK provide a wrapper:
+
+.. code-block:: python
+
+   root = angus.connect()
+
+Get services
+++++++++++++
+
+Once you have a ``Root`` resource, you can get a handle on a service. The
+root resource has a `̀`services`` sub-resource that is the service list.
+You can get one by using ``get_service`` method:
+
+.. code-block:: python
+
+   service = root.services.get_service('face_detection', 1)
+   print(service.endpoint)
+
+You get back a handler on the first version of "face_detection" service.
+The version is optional, if it not provided, the last version is used.
+
+Get a composite service
++++++++++++++++++++++++
+
+The sdk provide you a convenient wrapper to call several service
+at the same time:
+
+.. code-block:: python
+
+   services = root.services.get_services([('face_detection', 1), ('dummy', 2)])
+
+You get back a service handler that enables using 'face_detection' and 'dummy'
+services at the same time.
+Versions are optional:
+
+.. code-block:: python
+
+   services = root.services.get_services(['face_detection', 'dummy'])
+
+And service list are also optional, if it not provided, all services are used:
+
+.. code-block:: python
+
+   services = root.services.get_services()
+
+
+Process a job
++++++++++++++
+
+Heach `̀ Service`̀  resource contains a jobs sub-resource that is the list of
+processed jobs. This resource enables job manipulation (list, create, delete).
+The SDK provides a easy way to create a new job:
+
+.. code-block:: python
+
+   parameters = { 'image': open('/tmp/macgyver.jpg', 'rb') }
+   new_job = service.process(parameters)
+
+The `̀ new_job`` object is a handler on the job resource created in the cloud.
+This is exactly the same interface for composite services:
+
+.. code-block:: python
+
+   new_job = services.process(parameters)
+
 
 Discussion and support
 ----------------------
