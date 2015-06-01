@@ -27,7 +27,6 @@ import requests_futures.sessions
 
 from six.moves.urllib import parse as urlparse
 
-
 __updated__ = "2015-06-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
