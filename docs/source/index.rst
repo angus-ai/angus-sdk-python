@@ -8,20 +8,11 @@ Angus Python SDK's documentation!
 
 Angus Python SDK is a python client library for Angus.ai Cloud.
 
-Hello, world
-------------
-
-Here is a simple "Hello, world" example for Angus SDK (replace macgyver.jpg by your own image with a face to detect)::
-
-     import angus
-
-     conn = angus.connect()
-     service = conn.services.get_service('face_detection', version=1)
-     job = service.process({'image': open('./macgyver.jpg')})
-     print job.result['faces']
-
 Instalation
 -----------
+
+Linux
++++++
 
 **Automatic installation**::
 
@@ -46,8 +37,48 @@ The Angus SDK source code is `hosted on GitHub <https://github.com/angus-ai/angu
 
 **Platforms**: Angus SDK can be use on any platform.
 
-Quickstart
-----------
+Windows
++++++++
+
+**Automatic installation**::
+
+  python -m pip instsall angus-sdk-python
+
+
+Initialisation
+--------------
+
+Angus SDK needs some information to connect to the angus.ai cloud:
+  * **the root url**, this is the main entry point of the targeted server
+  * **client id / access token** (equivalent to login/password for a machine)
+  * **certificates**: currently the angus.ai platform certificate is not available
+    on every platform, then we provide them into a bundle.
+All these parameters can be stored by default in the `~/.angusdk/` directory.
+The sdk provide a tools namely `angusme` that generates the directory and
+configuration files::
+
+  > angusme
+  Please copy/paste your client_id (current: None): <your client_id>
+  Please copy/paste your access_token(current: None): <your access_token>
+  Configuration directory successfully created in (/home/yienyien/.angusdk), credentials can be modified there directly
+
+
+Hello, world
+------------
+
+Here is a simple "Hello, world" example for Angus SDK (replace macgyver.jpg by your own image with a face to detect)::
+
+     import angus
+
+     conn = angus.connect()
+     service = conn.services.get_service('face_detection', version=1)
+     job = service.process({'image': open('./macgyver.jpg')})
+     print job.result['faces']
+
+
+
+Documentation
+-------------
 
 Connect to a angus.ai cloud
 +++++++++++++++++++++++++++
