@@ -23,8 +23,9 @@ import json
 import os
 import shutil
 import sys
+from six.moves import input as raw_input
 
-__updated__ = "2015-04-28"
+__updated__ = "2015-06-01"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -240,7 +241,7 @@ def create_configuration():
             'default_root': 'https://gate.angus.ai',
         }, indent=True))
         f.flush()
-        print SUCCESS % (ANGUS_FULL_PATH)
+        print(SUCCESS % (ANGUS_FULL_PATH))
 
 
 def show_configuration():
@@ -248,25 +249,24 @@ def show_configuration():
     ca_path = os.path.join(ANGUS_FULL_PATH, 'certificate.pem')
 
     if not os.path.exists(ANGUS_FULL_PATH):
-        print "No angus configuration"
+        print("No angus configuration")
         return
 
-    print "Python version:"
+    print("Python version:")
     print(sys.version)
-
-    print "My authorize certificate:"
+    print("My authorize certificate:")
     if os.path.exists(ca_path):
         with open(ca_path, 'r') as f:
-            print f.read()
+            print(f.read())
     else:
-        print "\tWarning!!!, no certificate file"
+        print("\tWarning!!!, no certificate file")
 
-    print "My configuration:"
+    print("My configuration:")
     if os.path.exists(conf_path):
         with open(conf_path, 'r') as f:
-            print f.read()
+            print(f.read())
     else:
-        print "\tWarning!!!, no configuration file"
+        print("\tWarning!!!, no configuration file")
 
 
 def delete_configuration():
