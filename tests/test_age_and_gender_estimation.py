@@ -17,6 +17,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
+import StringIO
 import math
 import os
 import time
@@ -25,9 +26,9 @@ import pytest
 
 import angus.cloud
 import angus.rest
+import fake_camera
 
-
-__updated__ = "2015-05-31"
+__updated__ = "2015-06-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -58,6 +59,11 @@ def image_res(root):
 @pytest.fixture(scope="module")
 def image_res_3(root):
     return root.blobs.create(open(IMG_3, 'rb'))
+
+
+@pytest.fixture(scope="module")
+def session(service):
+    return service.create_session()
 
 
 def check_result_res(result_res, howmany=1):
@@ -155,6 +161,20 @@ def test_href_async(service, image_res):
     assert result_res.status == angus.rest.Resource.ACCEPTED
     assert 'faces' not in result_res.representation
     check_result_res_eventually(result_res)
+
+
+def test_default_session(service):
+    service.enable_session()
+    camera = fake_camera.Camera("./video1")
+    while camera.has_next():
+        img = StringIO.StringIO(camera.next())
+        result_res = service.process(
+            parameters={
+                'image': img
+            })
+        check_result_res_eventually(result_res)
+
+    service.disable_session()
 
 
 def test_local_upload_file(service):
