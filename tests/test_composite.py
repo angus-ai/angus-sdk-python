@@ -17,13 +17,15 @@
 # specific language governing permissions and limitations
 # under the License.
 
+import StringIO
+import pytest
 import time
 
-import pytest
-
 import angus
+import fake_camera
 
-__updated__ = "2015-05-29"
+
+__updated__ = "2015-06-04"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -106,3 +108,17 @@ def test_embeded_select_version(select_version_services):
 
 def test_href_select_version(select_version_services, image_res):
     delegate(select_version_services, image_res)
+
+
+def test_session(all_services):
+    all_services.enable_session()
+    camera = fake_camera.Camera("./video1")
+    while camera.has_next():
+        img = StringIO.StringIO(camera.next())
+        result_res = all_services.process(
+            parameters={
+                'image': img
+            })
+        check_result_res_eventually(result_res)
+
+    all_services.disable_session()

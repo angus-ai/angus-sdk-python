@@ -58,12 +58,19 @@ class CompositeService(rest.Resource):
         self.services = kwargs.pop("services")
         super(CompositeService, self).__init__(*args, **kwargs)
         self.root = Root(conf=self.conf)
+        self.default_session = None
 
-    def process(self, parameters, async=False, callback=None):
+    def process(self, parameters, async=False, session=None, callback=None):
         if parameters is None:
             parameters = {}
         else:
             parameters = copy.copy(parameters)
+
+        if session is not None:
+            session = self.default_session
+
+        if session is not None:
+            parameters['state'] = session.state()
 
         parameters['async'] = async
 
@@ -103,6 +110,17 @@ class CompositeService(rest.Resource):
             callback(job)
 
         return job
+
+    def create_session(self):
+        session = rest.Session(self)
+        return session
+
+    def enable_session(self):
+        if self.default_session is None:
+            self.default_session = self.create_session()
+
+    def disable_session(self):
+        self.default_session = None
 
 
 class ServiceDirectory(rest.Collection):
