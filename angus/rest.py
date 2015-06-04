@@ -131,6 +131,21 @@ class Collection(Resource):
         return result
 
 
+class Session():
+    """State of the service store in the client
+    """
+
+    def __init__(self, service):
+        self.service = service
+        self.id = uuid.uuid1()
+
+    def state(self):
+        # TODO: for a short term, the server code will be statefull, and
+        # use a session_id but it is bad, in a near future, client session will store
+        # all information need by the service to compute the new result
+        return {'session_id': self.id}
+
+
 class Service(Resource):
 
     """A service is a resource on which we can create a new job, i.e. record
@@ -144,13 +159,20 @@ class Service(Resource):
                                     conf=self.conf)
         self.jobs = Collection(self.endpoint, 'jobs',
                                conf=self.conf)
+        self.default_session = None
 
     def process(
-            self, parameters=None, async=False, callback=None):
+            self, parameters=None, async=False, session=None, callback=None):
         if parameters is None:
             parameters = {}
         else:
             parameters = copy.copy(parameters)
+
+        if session is not None:
+            session = self.default_session
+
+        if session is not None:
+            parameters['state'] = session.state()
 
         parameters['async'] = async
 
@@ -165,6 +187,17 @@ class Service(Resource):
 
     def get_description(self):
         return self.description.fetch()
+
+    def create_session(self):
+        session = Session(self)
+        return session
+
+    def enable_session(self):
+        if self.default_session is None:
+            self.default_session = self.create_session()
+
+    def disable_session(self):
+        self.default_session = None
 
 
 class GenericService(Collection):
