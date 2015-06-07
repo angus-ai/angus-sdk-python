@@ -114,7 +114,7 @@ Get services
 ++++++++++++
 
 Once you have a ``Root`` resource, you can get a handle on a service. The
-root resource has a `̀`services`` sub-resource that is the service list.
+root resource has a ``services`` sub-resource that is the service list.
 You can get one by using ``get_service`` method:
 
 .. code-block:: python
@@ -153,7 +153,7 @@ And service list are also optional, if it not provided, all services are used:
 Process a job
 +++++++++++++
 
-Heach `̀ Service`̀  resource contains a jobs sub-resource that is the list of
+Each ``Service`` resource contains a jobs sub-resource that is the list of
 processed jobs. This resource enables job manipulation (list, create, delete).
 The SDK provides a easy way to create a new job:
 
@@ -162,7 +162,7 @@ The SDK provides a easy way to create a new job:
    parameters = { 'image': open('/tmp/macgyver.jpg', 'rb') }
    new_job = service.process(parameters)
 
-The `̀ new_job`` object is a handler on the job resource created in the cloud.
+The ``new_job`` object is a handler on the job resource created in the cloud.
 This is exactly the same interface for composite services:
 
 .. code-block:: python
