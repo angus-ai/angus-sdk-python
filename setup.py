@@ -17,10 +17,12 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+import codecs
+
 from setuptools import setup, find_packages
 import pkg_resources
 
-__updated__ = "2015-06-07"
+__updated__ = "2015-06-08"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennaël Gâté"]
@@ -28,8 +30,12 @@ __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
+with codecs.open('VERSION', 'r', 'utf8') as lf:
+    version = lf.read()
+
+
 setup(name='angus-sdk-python',
-      version=pkg_resources.resource_string(__name__, "/VERSION"),
+      version=version,
       description='Angus python SDK',
       author=__author__,
       author_email='aurelien.moreau@yienyien.net',
