@@ -74,6 +74,8 @@ def check_result_res_eventually(result_res, where=None):
 def test_embeded_sync(service):
     result_res = service.process(
         parameters={
+            'sensitivity': 1.0,
+            'baseline': 1.0,
             'sound': open(SND_1, 'rb')},
         callback=check_result_res,
         async=False)
@@ -83,6 +85,8 @@ def test_embeded_sync(service):
 def test_href_sync(service, image_res):
     result_res = service.process(
         parameters={
+            'sensitivity': 1.0,
+            'baseline': 1.0,
             'sound': image_res},
         callback=check_result_res,
         async=False)
@@ -92,6 +96,8 @@ def test_href_sync(service, image_res):
 def test_embeded_async(service):
     result_res = service.process(
         parameters={
+            'sensitivity': 1.0,
+            'baseline': 1.0,
             'sound': open(SND_1, 'rb')},
         callback=check_result_res,
         async=True)
@@ -103,6 +109,8 @@ def test_embeded_async(service):
 def test_href_async(service, image_res):
     result_res = service.process(
         parameters={
+            'sensitivity': 1.0,
+            'baseline': 1.0,
             'sound': image_res},
         callback=check_result_res,
         async=True)
@@ -114,6 +122,8 @@ def test_href_async(service, image_res):
 def test_local_upload_file(service):
     result_res = service.process(
         parameters={
+            'sensitivity': 1.0,
+            'baseline': 1.0,
             'sound': "file://%s" % (os.path.abspath(SND_1)),
         },
         callback=check_result_res,
