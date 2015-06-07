@@ -130,7 +130,6 @@ def test_embeded_async(service):
         callback=check_result_res,
         async=True)
     assert result_res.status == angus.rest.Resource.ACCEPTED
-    assert 'faces' not in result_res.representation
     check_result_res_eventually(result_res)
 
 
