@@ -17,7 +17,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import math
 import os
 import time
 
@@ -27,7 +26,7 @@ import angus.cloud
 import angus.rest
 
 
-__updated__ = "2015-05-31"
+__updated__ = "2015-06-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
