@@ -17,7 +17,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import StringIO
+import io
 import math
 import os
 import time
@@ -28,7 +28,8 @@ import angus.cloud
 import angus.rest
 import fake_camera
 
-__updated__ = "2015-06-07"
+
+__updated__ = "2015-06-08"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -167,7 +168,7 @@ def test_default_session(service):
     service.enable_session()
     camera = fake_camera.Camera("./video1")
     while camera.has_next():
-        img = StringIO.StringIO(camera.next())
+        img = io.BytesIO(camera.next())
         result_res = service.process(
             parameters={
                 'image': img

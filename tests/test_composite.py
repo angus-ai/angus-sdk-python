@@ -17,15 +17,16 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import StringIO
-import pytest
+import io
 import time
+
+import pytest
 
 import angus
 import fake_camera
 
 
-__updated__ = "2015-06-04"
+__updated__ = "2015-06-08"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -58,7 +59,7 @@ def select_version_services(root):
 
 @pytest.fixture(scope="module")
 def image_res(root):
-    return root.blobs.create(open(IMG_1))
+    return root.blobs.create(open(IMG_1, 'rb'))
 
 
 def check_result_res(result_res, howmany=1):
@@ -87,7 +88,7 @@ def delegate(service, image):
 
 
 def test_embeded_all(all_services):
-    delegate(all_services, open(IMG_1))
+    delegate(all_services, open(IMG_1, 'rb'))
 
 
 def test_href_all(all_services, image_res):
@@ -95,7 +96,7 @@ def test_href_all(all_services, image_res):
 
 
 def test_embeded_select(select_services):
-    delegate(select_services, open(IMG_1))
+    delegate(select_services, open(IMG_1, 'rb'))
 
 
 def test_href_select(select_services, image_res):
@@ -103,7 +104,7 @@ def test_href_select(select_services, image_res):
 
 
 def test_embeded_select_version(select_version_services):
-    delegate(select_version_services, open(IMG_1))
+    delegate(select_version_services, open(IMG_1, 'rb'))
 
 
 def test_href_select_version(select_version_services, image_res):
@@ -114,7 +115,7 @@ def test_session(all_services):
     all_services.enable_session()
     camera = fake_camera.Camera("./video1")
     while camera.has_next():
-        img = StringIO.StringIO(camera.next())
+        img = io.BytesIO(camera.next())
         result_res = all_services.process(
             parameters={
                 'image': img
