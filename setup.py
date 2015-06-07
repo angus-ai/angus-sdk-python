@@ -18,6 +18,7 @@
 # specific language governing permissions and limitations
 # under the License.
 from setuptools import setup, find_packages
+import pkg_resources
 
 __updated__ = "2015-06-07"
 __author__ = "Aurélien Moreau"
@@ -28,7 +29,7 @@ __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
 setup(name='angus-sdk-python',
-      version="0.0.5",
+      version=pkg_resources.resource_string(__name__, "/VERSION"),
       description='Angus python SDK',
       author=__author__,
       author_email='aurelien.moreau@yienyien.net',
