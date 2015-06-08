@@ -30,7 +30,9 @@ __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
 __version__ = None
-execfile('angus/version.py')
+version_file = 'angus/version.py'
+exec(compile(open(version_file, 'rb').read(), version_file, 'exec'))
+
 
 setup(name='angus-sdk-python',
       version=__version__,
