@@ -22,12 +22,12 @@ import copy
 import json
 import uuid
 
+from six.moves.urllib import parse as urlparse
 import requests
 import requests_futures.sessions
 
-from six.moves.urllib import parse as urlparse
 
-__updated__ = "2015-06-07"
+__updated__ = "2015-06-08"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -137,7 +137,7 @@ class Session():
 
     def __init__(self, service):
         self.service = service
-        self.id = uuid.uuid1()
+        self.id = str(uuid.uuid1())
 
     def state(self):
         # TODO: for a short term, the server code will be statefull, and
@@ -168,7 +168,7 @@ class Service(Resource):
         else:
             parameters = copy.copy(parameters)
 
-        if session is not None:
+        if session is None:
             session = self.default_session
 
         if session is not None:
