@@ -22,16 +22,14 @@ import argparse
 import json
 import logging
 import os
-import pkgutil
 import sys
-import pkg_resources
 
 import angus
 import angus.cloud
+import version
 
-
-__version__ = pkg_resources.resource_string(__name__, "../VERSION")
-__updated__ = "2015-06-07"
+__version__ = version.__version__
+__updated__ = "2015-06-08"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
