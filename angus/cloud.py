@@ -59,12 +59,15 @@ class CompositeService(rest.Resource):
         super(CompositeService, self).__init__(*args, **kwargs)
         self.root = Root(conf=self.conf)
         self.default_session = None
+        self.session_parameters = None
 
     def process(self, parameters, async=False, session=None, callback=None):
         if parameters is None:
             parameters = {}
         else:
             parameters = copy.copy(parameters)
+
+        parameters.update(self.session_parameters)
 
         if session is not None:
             session = self.default_session
@@ -115,9 +118,16 @@ class CompositeService(rest.Resource):
         session = rest.Session(self)
         return session
 
-    def enable_session(self):
+    def enable_session(self, parameters=None):
         if self.default_session is None:
             self.default_session = self.create_session()
+
+        if parameters is None:
+            parameters = {}
+        else:
+            parameters = copy.copy(parameters)
+
+        self.session_parameters = parameters
 
     def disable_session(self):
         self.default_session = None

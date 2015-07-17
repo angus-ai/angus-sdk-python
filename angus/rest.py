@@ -160,6 +160,7 @@ class Service(Resource):
         self.jobs = Collection(self.endpoint, 'jobs',
                                conf=self.conf)
         self.default_session = None
+        self.session_parameters = None
 
     def process(
             self, parameters=None, async=False, session=None, callback=None):
@@ -167,6 +168,8 @@ class Service(Resource):
             parameters = {}
         else:
             parameters = copy.copy(parameters)
+
+        parameters.update(self.session_parameters)
 
         if session is None:
             session = self.default_session
@@ -192,9 +195,16 @@ class Service(Resource):
         session = Session(self)
         return session
 
-    def enable_session(self):
+    def enable_session(self, parameters=None):
         if self.default_session is None:
             self.default_session = self.create_session()
+
+        if parameters is None:
+            parameters = {}
+        else:
+            parameters = copy.copy(parameters)
+
+        self.session_parameters = parameters
 
     def disable_session(self):
         self.default_session = None
