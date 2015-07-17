@@ -29,7 +29,7 @@ import angus.rest
 import fake_camera
 
 
-__updated__ = "2015-06-08"
+__updated__ = "2015-07-17"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -72,12 +72,6 @@ def check_result_res(result_res, howmany=1):
     assert result_res.status == angus.rest.Resource.CREATED
     assert result_res.representation == result_res.result
     assert 'faces' in result_res.representation
-    t_min = math.ceil(0.5 * howmany)
-    t_max = math.floor(1.5 * howmany)
-
-    result = len(result_res.representation['faces'])
-    assert result >= t_min
-    assert result <= t_max
 
 
 def check_result_res_eventually(result_res, howmany=1):
@@ -122,6 +116,7 @@ def test_embeded_sync_3(service):
 
 
 def test_href_sync(service, image_res):
+    print image_res.endpoint
     result_res = service.process(
         parameters={
             'image': image_res},
