@@ -23,7 +23,7 @@ import json
 from angus import rest
 import angus
 
-__updated__ = "2015-06-07"
+__updated__ = "2015-07-17"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -67,7 +67,8 @@ class CompositeService(rest.Resource):
         else:
             parameters = copy.copy(parameters)
 
-        parameters.update(self.session_parameters)
+        if self.session_parameters is not None:
+            parameters.update(self.session_parameters)
 
         if session is not None:
             session = self.default_session

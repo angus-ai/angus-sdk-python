@@ -27,7 +27,7 @@ import requests
 import requests_futures.sessions
 
 
-__updated__ = "2015-06-08"
+__updated__ = "2015-07-17"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -169,7 +169,8 @@ class Service(Resource):
         else:
             parameters = copy.copy(parameters)
 
-        parameters.update(self.session_parameters)
+        if self.session_parameters is not None:
+            parameters.update(self.session_parameters)
 
         if session is None:
             session = self.default_session
