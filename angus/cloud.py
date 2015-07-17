@@ -83,7 +83,7 @@ class CompositeService(rest.Resource):
         data = json.dumps(parameters, cls=generate_encoder(self.root))
 
         futures = []
-        for service in self.services:
+        for name, service in self.services.iteritems():
             if attachments:
                 files = attachments + \
                     [('meta', (None, data, 'application/json'))]
@@ -94,7 +94,7 @@ class CompositeService(rest.Resource):
                     service.jobs.endpoint,
                     data=data,
                     headers=headers)
-            futures.append((service.name, r))
+            futures.append((name, r))
 
         result = {}
         for (name, r) in futures:
@@ -157,7 +157,7 @@ class ServiceDirectory(rest.Collection):
         if services is None:
             services = description
 
-        cservices = []
+        cservices = dict()
         for name in services:
             if isinstance(name, tuple):
                 version = name[1]
@@ -166,7 +166,7 @@ class ServiceDirectory(rest.Collection):
                 version = None
 
             service = self.get_service(name, version)
-            cservices.append(service)
+            cservices[name] = service
 
         return CompositeService(
             "memory:///", "composite", services=cservices, conf=self.conf)
