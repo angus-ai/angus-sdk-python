@@ -55,10 +55,11 @@ def image_res(root):
 def check_result_res(result_res, where=None):
     isinstance(result_res, angus.rest.Resource)
     assert result_res.status == angus.rest.Resource.CREATED
-    assert 'loc' in result_res.representation
+    assert result_res.representation == result_res.result
 
-    assert 'nb_sources' in result_res.representation['loc']
-    assert result_res.representation['loc']['nb_sources'] == 211
+    assert 'nb_sources' in result_res.representation
+    assert 'sources' in result_res.representation
+    assert result_res.representation['nb_sources'] == 36
 
 
 def check_result_res_eventually(result_res, where=None):
@@ -102,6 +103,8 @@ def test_embeded_async(service):
         callback=check_result_res,
         async=True)
     assert result_res.status == angus.rest.Resource.ACCEPTED
+
+
     assert 'loc' not in result_res.representation
     check_result_res_eventually(result_res)
 
