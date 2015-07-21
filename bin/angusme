@@ -284,11 +284,10 @@ def test_configuration():
         assert "echo" in result
 
         url = urlparse.urlparse(result["url"])
-
-        print("OK")
+        print("Server: %s://%s" % (url.scheme, url.netloc))
+        print("Status: OK")
     except Exception as e:
-        print(e)
-        print("KO")
+        print("Status: KO")
         show_configuration()
         sys.exit(-1)
 
