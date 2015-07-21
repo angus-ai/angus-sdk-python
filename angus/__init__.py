@@ -26,10 +26,10 @@ import sys
 
 import angus
 import angus.cloud
-import version
+import angus.version
 
-__version__ = version.__version__
-__updated__ = "2015-06-08"
+__version__ = angus.version.__version__
+__updated__ = "2015-07-21"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
