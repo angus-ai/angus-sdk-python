@@ -123,3 +123,13 @@ def test_session(all_services):
         check_result_res_eventually(result_res)
 
     all_services.disable_session()
+
+def test_composite_return_name():
+    conn = angus.connect()
+    service = conn.services.get_services(["face_detection", "age_and_gender_estimation"])
+    job = service.process({'image': open(IMG_1, 'rb')})
+    print job.result
+    result = job.result
+
+    assert("age_and_gender_estimation" in result)
+    assert("face_detection" in result)
