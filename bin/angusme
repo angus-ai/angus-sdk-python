@@ -25,7 +25,7 @@ import shutil
 import sys
 from six.moves import input as raw_input
 
-__updated__ = "2015-06-01"
+__updated__ = "2015-07-21"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -269,6 +269,30 @@ def show_configuration():
         print("\tWarning!!!, no configuration file")
 
 
+def test_configuration():
+    try:
+        import angus
+        from six.moves.urllib import parse as urlparse
+        root = angus.connect()
+        service = root.services.get_service('dummy')
+        job = service.process({'echo': 'OK'})
+
+        result = job.result
+
+        assert "status" in result
+        assert "url" in result
+        assert "echo" in result
+
+        url = urlparse.urlparse(result["url"])
+
+        print("OK")
+    except Exception as e:
+        print(e)
+        print("KO")
+        show_configuration()
+        sys.exit(-1)
+
+
 def delete_configuration():
     if os.path.exists(ANGUS_FULL_PATH):
         shutil.rmtree(ANGUS_FULL_PATH, ignore_errors=True)
@@ -286,12 +310,17 @@ def main():
     parser.add_argument('-d', '--delete', action='store_true',
                         help='remove current configuration if exists')
 
+    parser.add_argument('-t', '--test', action='store_true',
+                        help='test the installation by calling a dummy service')
+
     args = parser.parse_args(sys.argv[1:])
 
     if args.show:
         show_configuration()
     elif args.delete:
         delete_configuration()
+    elif args.test:
+        test_configuration()
     else:
         create_configuration()
 
