@@ -26,7 +26,7 @@ import angus
 import fake_camera
 
 
-__updated__ = "2015-06-08"
+__updated__ = "2015-07-21"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -66,7 +66,6 @@ def check_result_res(result_res, howmany=1):
     isinstance(result_res, angus.rest.Resource)
     assert result_res.status == 200
     assert result_res.representation == result_res.result
-    assert 'composite' in result_res.representation
 
 
 def check_result_res_eventually(result_res, howmany=1):
@@ -124,9 +123,11 @@ def test_session(all_services):
 
     all_services.disable_session()
 
+
 def test_composite_return_name():
     conn = angus.connect()
-    service = conn.services.get_services(["face_detection", "age_and_gender_estimation"])
+    service = conn.services.get_services(
+        ["face_detection", "age_and_gender_estimation"])
     job = service.process({'image': open(IMG_1, 'rb')})
     print job.result
     result = job.result

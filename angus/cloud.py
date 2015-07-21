@@ -23,7 +23,7 @@ import json
 from angus import rest
 import angus
 
-__updated__ = "2015-07-17"
+__updated__ = "2015-07-21"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -102,10 +102,7 @@ class CompositeService(rest.Resource):
             if r.status_code < 400:
                 result[name] = r.json()
 
-        result = {
-            "status": 200,
-            "composite": result,
-        }
+        result["status"] = 200
 
         job = rest.Job(
             self.endpoint, "", representation=result, conf=self.conf)
