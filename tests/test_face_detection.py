@@ -155,16 +155,3 @@ def test_href_async(service, image_res):
     assert result_res.status == angus.rest.Resource.ACCEPTED
     assert 'faces' not in result_res.representation
     check_result_res_eventually(result_res)
-
-
-def test_local_upload_file(service):
-    result_res = service.process(
-        parameters={
-            'image': "file://%s" % (os.path.abspath(IMG_1)),
-        },
-        callback=check_result_res,
-        async=False)
-    check_result_res_eventually(result_res)
-
-# TODO: Add a test with attachment but with a file:// in content
-# TODO: Add a test with no callback

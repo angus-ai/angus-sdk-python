@@ -144,7 +144,6 @@ def test_embeded_async_large(service):
         async=True)
     # Upload large file to force async computing
     assert result_res.status == angus.rest.Resource.ACCEPTED
-    assert 'faces' not in result_res.representation
     check_result_res_eventually(result_res, 43)
 
 
@@ -171,16 +170,3 @@ def test_default_session(service):
         check_result_res_eventually(result_res)
 
     service.disable_session()
-
-
-def test_local_upload_file(service):
-    result_res = service.process(
-        parameters={
-            'image': "file://%s" % (os.path.abspath(IMG_1)),
-        },
-        callback=check_result_res,
-        async=False)
-    check_result_res_eventually(result_res)
-
-# TODO: Add a test with attachment but with a file:// in content
-# TODO: Add a test with no callback
