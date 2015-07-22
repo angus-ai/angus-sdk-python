@@ -1,5 +1,20 @@
-Angus python SDK - Release Note v0.06
-=====================================
+Angus python SDK - Release Note v0.0.7
+======================================
+
+Bug fixed
+---------
+
+* Fixed Python 3 compatibility of composite calls.
+* When using composites, return json is now much simpler.
+
+Features added
+--------------
+
+* Parameters initially passed in ``process()`` can now be passed in ``enable_session()``.
+
+
+Angus python SDK - Release Note v0.0.6
+======================================
 
 Bug fixed
 ---------
