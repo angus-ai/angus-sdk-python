@@ -116,7 +116,6 @@ def test_embeded_sync_3(service):
 
 
 def test_href_sync(service, image_res):
-    print image_res.endpoint
     result_res = service.process(
         parameters={
             'image': image_res},

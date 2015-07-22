@@ -129,7 +129,6 @@ def test_composite_return_name():
     service = conn.services.get_services(
         ["face_detection", "age_and_gender_estimation"])
     job = service.process({'image': open(IMG_1, 'rb')})
-    print job.result
     result = job.result
 
     assert("age_and_gender_estimation" in result)
