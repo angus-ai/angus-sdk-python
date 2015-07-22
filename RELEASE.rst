@@ -11,6 +11,7 @@ Features added
 --------------
 
 * Parameters initially passed in ``process()`` can now be passed in ``enable_session()``.
+* Add a test function in angusme to check sucessful SDK installation.
 
 
 Angus python SDK - Release Note v0.0.6
