@@ -22,8 +22,10 @@ import json
 
 from angus import rest
 import angus
+import six
 
-__updated__ = "2015-07-21"
+
+__updated__ = "2015-07-22"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -83,7 +85,7 @@ class CompositeService(rest.Resource):
         data = json.dumps(parameters, cls=generate_encoder(self.root))
 
         futures = []
-        for name, service in self.services.iteritems():
+        for name, service in six.iteritems(self.services):
             if attachments:
                 files = attachments + \
                     [('meta', (None, data, 'application/json'))]
