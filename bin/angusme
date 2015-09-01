@@ -283,6 +283,7 @@ def test_configuration():
         import angus
         from six.moves.urllib import parse as urlparse
         root = angus.connect()
+        root.conf.timeout = 1
         service = root.services.get_service('dummy')
         job = service.process({'echo': 'OK'})
 

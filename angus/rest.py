@@ -27,7 +27,7 @@ import requests
 import requests_futures.sessions
 import logging
 
-__updated__ = "2016-12-02"
+__updated__ = "2017-01-02"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2016, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -43,6 +43,7 @@ class Configuration(requests_futures.sessions.FuturesSession):
         super(Configuration, self).__init__(max_workers=10)
         self.auth = None
         self.default_root = None
+        self.timeout = None
 
     def set_credential(self, client_id, access_token):
         self.auth = requests.auth.HTTPBasicAuth(client_id, access_token)
@@ -52,6 +53,16 @@ class Configuration(requests_futures.sessions.FuturesSession):
 
     def do_not_verify(self):
         self.verify = False
+
+    def get(self, *args, **kwargs):
+        if self.timeout:
+            kwargs.setdefault("timeout", self.timeout)
+        return super(Configuration, self).get(*args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        if self.timeout:
+            kwargs.setdefault("timeout", self.timeout)
+        return super(Configuration, self).post(*args, **kwargs)
 
 
 class Resource(object):
