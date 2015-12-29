@@ -25,7 +25,7 @@ import shutil
 import sys
 from six.moves import input as raw_input
 
-__updated__ = "2015-07-21"
+__updated__ = "2015-12-29"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -216,6 +216,7 @@ def create_configuration():
         if os.path.exists(conf_path):
             with open(conf_path, 'r') as f:
                 conf = json.loads(f.read())
+                default_root = conf.get('default_root', None)
                 client_id = conf.get('client_id', None)
                 access_token = conf.get('access_token', None)
 
@@ -223,10 +224,17 @@ def create_configuration():
         f.write(CERTIF)
 
     r = raw_input(
+        "Please choose your gateway (current: %s): " %
+        (default_root))
+    if r != "":
+        default_root = r
+
+    r = raw_input(
         "Please copy/paste your client_id (current: %s): " %
         (client_id))
     if r != "":
         client_id = r
+
     r = raw_input(
         "Please copy/paste your access_token(current: %s): " %
         (access_token))
@@ -238,7 +246,7 @@ def create_configuration():
             'client_id': client_id,
             'access_token': access_token,
             'ca_path': ca_path,
-            'default_root': 'https://gate.angus.ai',
+            'default_root': default_root,
         }, indent=True))
         f.flush()
         print(SUCCESS % (ANGUS_FULL_PATH))

@@ -1,3 +1,16 @@
+Angus python SDK - Release Note v0.0.8
+======================================
+
+Bug fixed
+---------
+
+* None
+
+Features added
+--------------
+
+* angusme enable gateway modification
+
 Angus python SDK - Release Note v0.0.7
 ======================================
 
