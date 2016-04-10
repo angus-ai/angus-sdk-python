@@ -25,9 +25,9 @@ import angus
 import six
 
 
-__updated__ = "2015-07-22"
+__updated__ = "2016-04-10"
 __author__ = "Aurélien Moreau"
-__copyright__ = "Copyright 2015, Angus.ai"
+__copyright__ = "Copyright 2015-2016, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
@@ -72,7 +72,7 @@ class CompositeService(rest.Resource):
         if self.session_parameters is not None:
             parameters.update(self.session_parameters)
 
-        if session is not None:
+        if session is None:
             session = self.default_session
 
         if session is not None:
