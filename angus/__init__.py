@@ -22,16 +22,20 @@ import argparse
 import json
 import logging
 import os
+import pkgutil
 import sys
 
 import angus
 import angus.cloud
 import angus.version
 
+
+__path__ = pkgutil.extend_path(__path__, __name__)
+
 __version__ = angus.version.__version__
-__updated__ = "2015-07-21"
+__updated__ = "2016-05-06"
 __author__ = "Aurélien Moreau"
-__copyright__ = "Copyright 2015, Angus.ai"
+__copyright__ = "Copyright 2015-2016, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
