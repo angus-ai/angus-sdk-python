@@ -29,7 +29,7 @@ import angus.rest
 import fake_camera
 
 
-__updated__ = "2015-07-17"
+__updated__ = "2016-04-19"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -43,8 +43,9 @@ IMG_LARGE = 'large.jpg'
 
 
 @pytest.fixture(scope="module")
-def root():
-    return angus.cloud.Root()
+def root(server, client, token, verify):
+    return angus.connect(
+        url=server, client_id=client, access_token=token, verify=verify)
 
 
 @pytest.fixture(scope="module")
@@ -84,8 +85,12 @@ def check_result_res_eventually(result_res, howmany=1):
     check_result_res(result_res, howmany)
 
 
-def test_connect():
-    conn = angus.connect()
+def test_connect(server, client, token, verify):
+    conn = angus.connect(
+        url=server,
+        client_id=client,
+        access_token=token,
+        verify=verify)
     service = conn.services.get_service('face_detection', version=1)
     assert service is not None
 

@@ -27,6 +27,7 @@ import sys
 
 import angus
 import angus.cloud
+import angus.rest
 import angus.version
 
 
@@ -131,5 +132,12 @@ def get_default_configuration(argv=""):
     return conf
 
 
-def connect(url=None, conf=None):
+def connect(url=None, conf=None, client_id=None,
+            access_token=None, verify=True):
+    if None not in [client_id, access_token]:
+        conf = angus.rest.Configuration()
+        conf.set_credential(client_id, access_token)
+        if not verify:
+            conf.do_not_verify()
+
     return angus.cloud.Root(url, conf)

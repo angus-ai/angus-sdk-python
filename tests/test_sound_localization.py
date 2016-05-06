@@ -26,7 +26,7 @@ import angus.cloud
 import angus.rest
 
 
-__updated__ = "2015-06-07"
+__updated__ = "2016-04-19"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -38,8 +38,9 @@ SND_1 = "soundloc.wav"
 
 
 @pytest.fixture(scope="module")
-def root():
-    return angus.cloud.Root()
+def root(server, client, token, verify):
+    return angus.connect(
+        url=server, client_id=client, access_token=token, verify=verify)
 
 
 @pytest.fixture(scope="module")
@@ -103,7 +104,6 @@ def test_embeded_async(service):
         callback=check_result_res,
         async=True)
     assert result_res.status == angus.rest.Resource.ACCEPTED
-
 
     assert 'loc' not in result_res.representation
     check_result_res_eventually(result_res)

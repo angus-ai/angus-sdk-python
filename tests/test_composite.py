@@ -26,7 +26,7 @@ import angus
 import fake_camera
 
 
-__updated__ = "2015-07-21"
+__updated__ = "2016-04-19"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -38,8 +38,9 @@ IMG_1 = 'Angus-6.jpg'
 
 
 @pytest.fixture(scope="module")
-def root():
-    return angus.connect()
+def root(server, client, token, verify):
+    return angus.connect(
+        url=server, client_id=client, access_token=token, verify=verify)
 
 
 @pytest.fixture(scope="module")
@@ -124,8 +125,12 @@ def test_session(all_services):
     all_services.disable_session()
 
 
-def test_composite_return_name():
-    conn = angus.connect()
+def test_composite_return_name(server, client, token, verify):
+    conn = angus.connect(
+        url=server,
+        client_id=client,
+        access_token=token,
+        verify=verify)
     service = conn.services.get_services(
         ["face_detection", "age_and_gender_estimation"])
     job = service.process({'image': open(IMG_1, 'rb')})
