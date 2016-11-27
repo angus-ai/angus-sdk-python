@@ -121,6 +121,30 @@ class Collection(Resource):
         return resource_type(
             self.endpoint, result['url'], representation=result, conf=self.conf)
 
+
+    def create_async(self, parameters, callback, resource_type=Resource):
+
+        def store(res, resource_type, callback):
+            res = res.result()
+            res.raise_for_status()
+
+            result = res.json()
+            callback(resource_type(self.endpoint, result['url'],
+                             representation=result, conf=self.conf))
+
+        attachments = []
+
+        data = json.dumps(parameters, cls=generate_encoder(attachments))
+
+        if attachments:
+            files = attachments + [('meta', (None, data, 'application/json'))]
+            r = self.conf.post(self.endpoint, files=files)
+        else:
+            headers = {'content-type': 'application/json'}
+            r = self.conf.post(self.endpoint, data=data, headers=headers)
+
+        r.add_done_callback(lambda fut: store(fut, resource_type, callback))
+
     def list(self, filters):
         r = self.conf.get(self.endpoint, params=filters)
 
@@ -180,14 +204,17 @@ class Service(Resource):
 
         parameters['async'] = async
 
-        job = self.jobs.create(
-            parameters,
-            resource_type=Job)
+        if callback:
+            self.jobs.create_async(
+                parameters,
+                callback,
+                resource_type=Job)
+        else:
+            job = self.jobs.create(
+                parameters,
+                resource_type=Job)
+            return job
 
-        if job.status == Resource.CREATED and callback:
-            callback(job)
-
-        return job
 
     def get_description(self):
         return self.description.fetch()
