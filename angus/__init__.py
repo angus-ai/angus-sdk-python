@@ -42,7 +42,7 @@ __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
-logger = logging.getLogger('AnguSDK')
+logger = logging.getLogger('AngusSDK')
 
 
 def parse_cmd_line(argv):

@@ -25,7 +25,7 @@ import uuid
 from six.moves.urllib import parse as urlparse
 import requests
 import requests_futures.sessions
-
+import logging
 
 __updated__ = "2015-07-17"
 __author__ = "Aurélien Moreau"
@@ -35,6 +35,7 @@ __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
+logger = logging.getLogger('AngusSDK')
 
 class Configuration(requests_futures.sessions.FuturesSession):
 
@@ -121,6 +122,37 @@ class Collection(Resource):
         return resource_type(
             self.endpoint, result['url'], representation=result, conf=self.conf)
 
+
+    def create_async(self, parameters, callback, resource_type=Resource):
+
+        def store(res, resource_type, callback):
+            res = res.result()
+            res.raise_for_status()
+
+            result = res.json()
+            callback(resource_type(self.endpoint, result['url'],
+                             representation=result, conf=self.conf))
+
+        attachments = []
+
+        data = json.dumps(parameters, cls=generate_encoder(attachments))
+
+        if self.conf.executor._work_queue.qsize() > self.conf.executor._max_workers:
+            logger.warn("There are too many requests awaiting to "
+            "be sent. This request will be ignored. Please try to decrease "
+            "the rate at which \"process\" is called.")
+
+
+        if attachments:
+            files = attachments + [('meta', (None, data, 'application/json'))]
+            r = self.conf.post(self.endpoint, files=files)
+        else:
+            headers = {'content-type': 'application/json'}
+            r = self.conf.post(self.endpoint, data=data, headers=headers)
+
+        r.add_done_callback(lambda fut: store(fut, resource_type, callback))
+        return None
+
     def list(self, filters):
         r = self.conf.get(self.endpoint, params=filters)
 
@@ -180,14 +212,17 @@ class Service(Resource):
 
         parameters['async'] = async
 
-        job = self.jobs.create(
-            parameters,
-            resource_type=Job)
+        if callback:
+            job = self.jobs.create_async(
+                parameters,
+                callback,
+                resource_type=Job)
+        else:
+            job = self.jobs.create(
+                parameters,
+                resource_type=Job)
+            return job
 
-        if job.status == Resource.CREATED and callback:
-            callback(job)
-
-        return job
 
     def get_description(self):
         return self.description.fetch()
