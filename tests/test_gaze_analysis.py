@@ -18,13 +18,14 @@
 # under the License.
 
 import math
-import os
 import time
+import io
 
 import pytest
 
 import angus.cloud
 import angus.rest
+import fake_camera
 
 
 __updated__ = "2016-04-19"
@@ -84,78 +85,9 @@ def check_result_res_eventually(result_res, howmany=1):
     check_result_res(result_res, howmany)
 
 
-def test_connect(server, client, token, verify):
-    conn = angus.connect(
-        url=server,
-        client_id=client,
-        access_token=token,
-        verify=verify)
-    service = conn.services.get_service('face_detection', version=1)
-    assert service is not None
-
-
 def test_embeded_sync(service):
     result_res = service.process(
         parameters={
             'image': open(IMG_1, 'rb')},
-        callback=check_result_res,
         async=False)
-    check_result_res_eventually(result_res)
-
-
-def test_embeded_default(service):
-    result_res = service.process(
-        parameters={
-            'image': open(IMG_1, 'rb')},
-        callback=check_result_res)
-    check_result_res(result_res)
-
-
-def test_embeded_sync_3(service):
-    result_res = service.process(
-        parameters={
-            'image': open(IMG_3, 'rb')},
-        callback=lambda x: check_result_res(x, 3), async=False)
-    check_result_res_eventually(result_res, 3)
-
-
-def test_href_sync(service, image_res):
-    result_res = service.process(
-        parameters={
-            'image': image_res},
-        callback=check_result_res,
-        async=False)
-    check_result_res_eventually(result_res)
-
-
-def test_embeded_async(service):
-    result_res = service.process(
-        parameters={
-            'image': open(IMG_1, 'rb')},
-        callback=check_result_res,
-        async=True)
-    assert result_res.status == angus.rest.Resource.ACCEPTED
-    check_result_res_eventually(result_res)
-
-
-def test_embeded_async_large(service):
-    result_res = service.process(
-        parameters={
-            'image': open(IMG_LARGE, 'rb')},
-        callback=lambda x: check_result_res(x, 43),
-        async=True)
-    # Upload large file to force async computing
-    assert result_res.status == angus.rest.Resource.ACCEPTED
-    assert 'faces' not in result_res.representation
-    check_result_res_eventually(result_res, 43)
-
-
-def test_href_async(service, image_res):
-    result_res = service.process(
-        parameters={
-            'image': image_res},
-        callback=check_result_res,
-        async=True)
-    assert result_res.status == angus.rest.Resource.ACCEPTED
-    assert 'faces' not in result_res.representation
     check_result_res_eventually(result_res)

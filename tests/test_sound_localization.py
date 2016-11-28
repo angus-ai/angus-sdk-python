@@ -17,7 +17,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import os
 import time
 
 import pytest
@@ -81,7 +80,7 @@ def test_embeded_sync(service):
             'sound': open(SND_1, 'rb')},
         callback=check_result_res,
         async=False)
-    check_result_res_eventually(result_res)
+
 
 
 def test_href_sync(service, image_res):
@@ -92,31 +91,3 @@ def test_href_sync(service, image_res):
             'sound': image_res},
         callback=check_result_res,
         async=False)
-    check_result_res_eventually(result_res)
-
-
-def test_embeded_async(service):
-    result_res = service.process(
-        parameters={
-            'sensitivity': 1.0,
-            'baseline': 1.0,
-            'sound': open(SND_1, 'rb')},
-        callback=check_result_res,
-        async=True)
-    assert result_res.status == angus.rest.Resource.ACCEPTED
-
-    assert 'loc' not in result_res.representation
-    check_result_res_eventually(result_res)
-
-
-def test_href_async(service, image_res):
-    result_res = service.process(
-        parameters={
-            'sensitivity': 1.0,
-            'baseline': 1.0,
-            'sound': image_res},
-        callback=check_result_res,
-        async=True)
-    assert result_res.status == angus.rest.Resource.ACCEPTED
-    assert 'loc' not in result_res.representation
-    check_result_res_eventually(result_res)
