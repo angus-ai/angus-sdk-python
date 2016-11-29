@@ -25,7 +25,7 @@ import angus
 import six
 
 
-__updated__ = "2016-04-10"
+__updated__ = "2016-11-30"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2016, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]

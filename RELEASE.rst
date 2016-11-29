@@ -1,3 +1,18 @@
+Angus python SDK - Release Note v0.0.9
+======================================
+
+Bug fixed
+---------
+
+* it is now possible to use sessions and composite services
+
+Features added
+--------------
+
+* enabling client side asynchronous calls
+* it is now easier to set credentials programmatically
+
+
 Angus python SDK - Release Note v0.0.8
 ======================================
 

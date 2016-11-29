@@ -17,21 +17,17 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import io
-import math
-import os
 import time
 
 import pytest
 
 import angus.cloud
 import angus.rest
-import fake_camera
 
 
-__updated__ = "2016-04-19"
-__author__ = "Aurélien Moreau"
-__copyright__ = "Copyright 2015, Angus.ai"
+__updated__ = "2016-11-30"
+__author__ = "Gwennael Gate"
+__copyright__ = "Copyright 2015-2016, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"

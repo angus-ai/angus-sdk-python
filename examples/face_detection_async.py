@@ -21,9 +21,9 @@
 import angus.cloud
 import time
 
-__updated__ = "2015-03-30"
-__author__ = "Aurélien Moreau"
-__copyright__ = "Copyright 2015, Angus.ai"
+__updated__ = "2016-11-30"
+__author__ = "Gwennael Gate"
+__copyright__ = "Copyright 2015-2016, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
