@@ -18,7 +18,7 @@ source distribution includes demo applications that are not present
 when Angus SDK is installed in this way, so you may wish to download a
 copy of the source tarball as well.
 
-**Manual installation**: Download `here <https://pypi.python.org/packages/source/a/angus-sdk-python/angus-sdk-python-0.0.9.tar.gz>`_
+**Manual installation**: Download `here <https://github.com/angus-ai/angus-sdk-python/releases/download/0.0.9/angus-sdk-python-0.0.9.tar.gz>`_
 
 .. parsed-literal::
 
