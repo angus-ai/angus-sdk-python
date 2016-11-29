@@ -1,7 +1,9 @@
 Angus Python SDK's documentation
 ================================
 
-Angus Python SDK is a python client library for `Angus.ai <http://www.angus.ai>`_ web services.
+Angus Python SDK is a python client library for `Angus.ai <http://www.angus.ai>`_ perception web services.
+Please look at Angus.ai full API `here <http://angus-doc.readthedocs.io/en/latest/services/index.html>`_.
+
 
 Installation
 -----------
@@ -73,7 +75,7 @@ Here is a simple "Hello, world" example for Angus SDK (replace macgyver.jpg by y
 Hello, world (asynchronous)
 ---------------------------
 
-Here is the same simple example but with a non-blocking call to 'process'. The provided callback is called whenever the request terminates.
+Here is the same simple example but with a non-blocking call to 'process'. The provided callback is called whenever the request terminates::
 
     import angus
 
@@ -89,15 +91,14 @@ Here is the same simple example but with a non-blocking call to 'process'. The p
 Go further
 ----------
 
-- Request your own credentials, currently send us an email at `contact@angus.ai <mailto:contact@angus.ai>`_
-- The complete documentation is on the way.
+- The complete API documentation is available `here <http://angus-doc.readthedocs.io/en/latest/services/index.html>`_.
 - See "Discussion and support" bellow.
 
 
 Discussion and support
 ----------------------
 
-You can discuss Angus SDK on `the Angus SDK developer mailing list <https://groups.google.com/d/forum/angus-sdk-python-dev>`_, and report bugs on the `GitHub issue tracker <https://github.com/angus-ai/angus-sdk-python/issues>`_.
+You can contact Angus.ai team at `contact@angus.ai <mailto:contact@angus.ai>`_, and report bugs on the `GitHub issue tracker <https://github.com/angus-ai/angus-sdk-python/issues>`_.
 
 This web site and all documentation is licensed under `Creative
 Commons 3.0 <http://creativecommons.org/licenses/by/3.0/>`_.
