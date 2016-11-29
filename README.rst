@@ -1,7 +1,7 @@
 Angus Python SDK's documentation
 ================================
 
-Angus Python SDK is a python client library for `Angus.ai <http://www.angus.ai>`_ Cloud.
+Angus Python SDK is a python client library for `Angus.ai <http://www.angus.ai>`_ web services.
 
 Installation
 -----------
@@ -16,33 +16,46 @@ source distribution includes demo applications that are not present
 when Angus SDK is installed in this way, so you may wish to download a
 copy of the source tarball as well.
 
-**Manual installation**: Download `here <https://pypi.python.org/packages/source/a/angus-sdk-python/angus-sdk-python-0.0.4.tar.gz>`_
+**Manual installation**: Download `here <https://pypi.python.org/packages/source/a/angus-sdk-python/angus-sdk-python-0.0.9.tar.gz>`_
 
 .. parsed-literal::
 
-   tar xvfz angus-sdk-python-0.0.4.tar.gz
-   cd angus-sdk-python-0.0.4
+   tar xvfz angus-sdk-python-0.0.9.tar.gz
+   cd angus-sdk-python-0.0.9
    python setup.py build
    sudo python setup.py install
 
 The Angus SDK source code is `hosted on GitHub <https://github.com/angus-ai/angus-sdk-python>`_.
 
-**Initialize your credentials**: Angus SDK request the Angus.ai cloud to provide remote 
-artificial intelligence algorithms. Access is restricted and you need some credentials
-to be authorized. For a demo purpose you can use the same as the example.
-When angus-sdk-python is installed, a new command is available.
-This unique help you to configure your environment:
+angus-sdk-python ships with a simple command tool 'angusme' that makes it easy to configure your environment.
 
-.. parsed-literal::
-  $ angusme
-  Please copy/paste your client_id: 7f5933d2-cd7c-11e4-9fe6-490467a5e114
-  Please copy/paste your access_token: db19c01e-18e5-4fc2-8b81-7b3d1f44533b
-  $ 
-
-You could explore all options by typing:
+You can explore all options by typing:
 
 .. parsed-literal::
   $ angusme --help
+
+
+Configuration
+-------------
+
+In order to authenticate your request to Angus.ai servers, you must register `here <http://www.angus.ai/request-credentials/>`_, and use the provided credentials as shown below.
+It is free and takes 1 minute.
+
+In a terminal, type:
+
+.. parsed-literal::
+
+    $ angusme
+    Please copy/paste your client_id: ********-****-****-****-************
+    Please copy/paste your access_token: ********-****-****-****-************
+
+Note that on ``Windows`` system, the previous command might not work.
+In that case use this command instead (replace by your Python installation path):
+
+.. parsed-literal::
+
+   $ python C:\\full\\path\\to\\Python<version>\\Scripts\\angusme
+
 
 Hello, world
 ------------
@@ -55,6 +68,23 @@ Here is a simple "Hello, world" example for Angus SDK (replace macgyver.jpg by y
      service = conn.services.get_service('face_detection', version=1)
      job = service.process({'image': open('./macgyver.jpg')})
      print job.result['faces']
+
+
+Hello, world (asynchronous)
+---------------------------
+
+Here is the same simple example but with a non-blocking call to 'process'. The provided callback is called whenever the request terminates.
+
+    import angus
+
+    def f(job):
+        print job.result['faces']
+
+    conn = angus.connect()
+    service = conn.services.get_service('face_detection', version=1)
+    job = service.process({'image': open('./macgyver.jpg')}, callback=f)
+    ### do stuff here while waiting for the server response.
+
 
 Go further
 ----------
@@ -72,6 +102,6 @@ You can discuss Angus SDK on `the Angus SDK developer mailing list <https://grou
 This web site and all documentation is licensed under `Creative
 Commons 3.0 <http://creativecommons.org/licenses/by/3.0/>`_.
 
-Angus Python SDK is Angus.ai open source technologies It is available under the `Apache License, Version 2.0. <https://www.apache.org/licenses/LICENSE-2.0.html>`_. Please read LICENSE and NOTICE files for more information.
+Angus Python SDK is an Angus.ai open source technology. It is available under the `Apache License, Version 2.0. <https://www.apache.org/licenses/LICENSE-2.0.html>`_. Please read LICENSE and NOTICE files for more information.
 
 Copyright 2015, Angus.ai
