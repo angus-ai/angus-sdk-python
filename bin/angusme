@@ -203,6 +203,7 @@ def create_configuration():
 
     client_id = None
     access_token = None
+    default_root = "https://gate.angus.ai"
 
     if not os.path.exists(ANGUS_FULL_PATH):
         os.makedirs(ANGUS_FULL_PATH)
