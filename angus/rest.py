@@ -139,7 +139,7 @@ class Collection(Resource):
 
         if self.conf.executor._work_queue.qsize() > self.conf.executor._max_workers:
             logger.warn("There are too many requests awaiting to "
-            "be sent. This request will be ignored. Please try to decrease "
+            "be sent. This request will be added to the queue but please try to decrease "
             "the rate at which \"process\" is called.")
 
 
