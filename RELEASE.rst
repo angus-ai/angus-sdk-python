@@ -1,3 +1,16 @@
+Angus python SDK - Release Note v0.0.10
+=======================================
+
+Bug fixed
+---------
+
+* angusme is now working properly when called for the first time
+
+Features added
+--------------
+
+* None
+
 Angus python SDK - Release Note v0.0.9
 ======================================
 

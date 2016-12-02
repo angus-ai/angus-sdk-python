@@ -27,7 +27,7 @@ import requests
 import requests_futures.sessions
 import logging
 
-__updated__ = "2016-11-30"
+__updated__ = "2016-12-02"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2016, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
