@@ -100,6 +100,10 @@ Discussion and support
 
 You can contact Angus.ai team at `contact@angus.ai <mailto:contact@angus.ai>`_, and report bugs on the `GitHub issue tracker <https://github.com/angus-ai/angus-sdk-python/issues>`_.
 
+For technical issues or question, start on Angus forum to get support
+by sending email on `support@angus.ai <mailto:support@angus.ai>`_ or
+by using online web interface https://groups.google.com/a/angus.ai/d/forum/support
+
 This web site and all documentation is licensed under `Creative
 Commons 3.0 <http://creativecommons.org/licenses/by/3.0/>`_.
 
