@@ -26,6 +26,7 @@ from six.moves.urllib import parse as urlparse
 import requests
 import requests_futures.sessions
 import logging
+from Queue import Queue
 
 __updated__ = "2017-01-02"
 __author__ = "Aurélien Moreau"
@@ -202,6 +203,8 @@ class Service(Resource):
                                     conf=self.conf)
         self.jobs = Collection(self.endpoint, 'jobs',
                                conf=self.conf)
+        self.streams = Collection(self.endpoint, 'streams',
+                                  conf=self.conf)
         self.default_session = None
         self.session_parameters = None
 
@@ -233,6 +236,30 @@ class Service(Resource):
                 parameters,
                 resource_type=Job)
             return job
+
+
+    def stream(
+            self, parameters=None, data=None, callback=None):
+        if parameters is None:
+            parameters = {}
+        else:
+            parameters = copy.copy(parameters)
+
+        stream = self.streams.create(
+            parameters,
+            resource_type=Stream)
+
+        input_url = stream.results["input"]
+        output_url = stream.result["output"]
+
+        self.streams.conf.post(input_url, data=data, stream=True,
+                               headers = {"Content-Type": "multipart/x-mixed-replace; boundary=myboundary"})
+
+        r = self.streams.conf.get(output_url, stream=True)
+
+        for line in r.iter_liens():
+            yield line
+
 
 
     def get_description(self):
