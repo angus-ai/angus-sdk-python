@@ -21,6 +21,7 @@
 import copy
 import json
 import uuid
+import re
 
 from six.moves.urllib import parse as urlparse
 import requests
@@ -108,6 +109,19 @@ def generate_encoder(attachments):
 
     return Encoder
 
+def parse(data):
+    start = data.find("--myboundary\r\n")
+    end = data.find("\r\n\r\n", start)
+    part = None
+    if start != -1 and end != -1:
+        header = data[start:end+4]
+        content_length = re.search(r'Content-Length: (\w+)\r\n', header).group(1)
+        content_length = int(content_length)
+        if len(data) > (end+6+content_length):
+            data = data[end+6:]
+            part = data[:content_length+1]
+    return data, part
+
 
 class Collection(Resource):
 
@@ -129,7 +143,6 @@ class Collection(Resource):
 
         r = r.result()
         r.raise_for_status()
-
         result = r.json()
         return resource_type(
             self.endpoint, result['url'], representation=result, conf=self.conf)
@@ -239,28 +252,51 @@ class Service(Resource):
 
 
     def stream(
-            self, parameters=None, data=None, callback=None):
+            self, parameters=None, data=None, session=None):
+
         if parameters is None:
             parameters = {}
         else:
             parameters = copy.copy(parameters)
 
+        if self.session_parameters is not None:
+            parameters.update(self.session_parameters)
+
+        if session is None:
+            session = self.default_session
+
+        if session is not None:
+            parameters['state'] = session.state()
+
         stream = self.streams.create(
             parameters,
-            resource_type=Stream)
+            resource_type=Job)
 
-        input_url = stream.results["input"]
+        input_url = stream.result["input"]
         output_url = stream.result["output"]
 
-        self.streams.conf.post(input_url, data=data, stream=True,
+        def parts():
+            for part in data:
+                buff = "\r\n".join(("--myboundary",
+                                    "Content-Type: image/jpeg",
+                                    "Content-Length: " + str(len(part)),
+                                    "\r\n",
+                                    part,
+                                    ""))
+                yield buff
+
+
+        self.conf.post(input_url, data=parts(), stream=True,
                                headers = {"Content-Type": "multipart/x-mixed-replace; boundary=myboundary"})
 
-        r = self.streams.conf.get(output_url, stream=True)
-
-        for line in r.iter_liens():
-            yield line
-
-
+        print output_url
+        r = requests.get(output_url, stream=True, auth=self.conf.auth)
+        data = ""
+        for content in r.iter_content(chunk_size=10): # read data as arrived
+            data = data + content
+            data, part = parse(data)
+            if part is not None:
+                yield part
 
     def get_description(self):
         return self.description.fetch()
