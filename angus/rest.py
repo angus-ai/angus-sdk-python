@@ -280,10 +280,11 @@ class Service(Resource):
                 buff = "\r\n".join(("--myboundary",
                                     "Content-Type: image/jpeg",
                                     "Content-Length: " + str(len(part)),
-                                    "\r\n",
+                                    "",
                                     part,
                                     ""))
                 yield buff
+            yield "--myboundary--"
 
 
         self.conf.post(input_url, data=parts(), stream=True,
