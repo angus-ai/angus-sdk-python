@@ -25,9 +25,9 @@ import wave
 import angus.cloud
 import pyaudio
 
-__updated__ = "2016-11-30"
+__updated__ = "2017-01-02"
 __author__ = "Aurélien Moreau"
-__copyright__ = "Copyright 2015, Angus.ai"
+__copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"

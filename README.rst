@@ -109,4 +109,4 @@ Commons 3.0 <http://creativecommons.org/licenses/by/3.0/>`_.
 
 Angus Python SDK is an Angus.ai open source technology. It is available under the `Apache License, Version 2.0. <https://www.apache.org/licenses/LICENSE-2.0.html>`_. Please read LICENSE and NOTICE files for more information.
 
-Copyright 2015-2016, Angus.ai
+Copyright 2015-2017, Angus.ai

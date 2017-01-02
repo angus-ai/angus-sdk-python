@@ -34,9 +34,9 @@ import angus.version
 __path__ = pkgutil.extend_path(__path__, __name__)
 
 __version__ = angus.version.__version__
-__updated__ = "2016-11-30"
+__updated__ = "2017-01-02"
 __author__ = "Aurélien Moreau"
-__copyright__ = "Copyright 2015-2016, Angus.ai"
+__copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
