@@ -290,8 +290,7 @@ class Service(Resource):
         self.conf.post(input_url, data=parts(), stream=True,
                                headers = {"Content-Type": "multipart/x-mixed-replace; boundary=myboundary"})
 
-        print output_url
-        r = requests.get(output_url, stream=True, auth=self.conf.auth)
+        r = requests.get(output_url, stream=True, auth=self.conf.auth, verify=self.conf.verify)
         data = ""
         for content in r.iter_content(chunk_size=10): # read data as arrived
             data = data + content
