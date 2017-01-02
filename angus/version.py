@@ -18,4 +18,4 @@
 # under the License.
 
 
-__version__ = "0.0.11-rc1"
+__version__ = "0.0.11-rc2"
