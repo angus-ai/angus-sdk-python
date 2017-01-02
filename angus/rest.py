@@ -276,10 +276,12 @@ class Service(Resource):
         output_url = stream.result["output"]
 
         def parts():
-            for part in data:
+            for params, field, part in data:
                 buff = "\r\n".join(("--myboundary",
                                     "Content-Type: image/jpeg",
                                     "Content-Length: " + str(len(part)),
+                                    "X-Angus-DataField: " + field,
+                                    "X-Angus-Parameters: " + json.dumps(params),
                                     "",
                                     part,
                                     ""))
