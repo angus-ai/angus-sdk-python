@@ -29,7 +29,7 @@ import requests_futures.sessions
 import logging
 from Queue import Queue
 
-__updated__ = "2017-01-02"
+__updated__ = "2017-01-03"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -109,17 +109,24 @@ def generate_encoder(attachments):
 
     return Encoder
 
+BREAK = "\r\n"
+DBREAK = BREAK+BREAK
+
 def parse(data):
+    """
+    Parse multipart data stream to extract parts.
+    """
     start = data.find("--myboundary\r\n")
-    end = data.find("\r\n\r\n", start)
+    end = data.find(DBREAK, start)
     part = None
     if start != -1 and end != -1:
-        header = data[start:end+4]
+        end = end + len(DBREAK)
+        header = data[start:end]
         content_length = re.search(r'Content-Length: (\w+)\r\n', header).group(1)
         content_length = int(content_length)
-        if len(data) > (end+6+content_length):
-            data = data[end+6:]
-            part = data[:content_length+1]
+        if len(data) > (end+content_length):
+            part = data[end:end+content_length]
+            data = data[end+len(BREAK)+content_length:]
     return data, part
 
 
