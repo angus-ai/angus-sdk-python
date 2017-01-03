@@ -22,12 +22,12 @@ import copy
 import json
 import uuid
 import re
+import logging
 
 from six.moves.urllib import parse as urlparse
 import requests
 import requests_futures.sessions
-import logging
-from Queue import Queue
+
 
 __updated__ = "2017-01-03"
 __author__ = "Aurélien Moreau"
@@ -37,15 +37,21 @@ __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
-logger = logging.getLogger('AngusSDK')
+LOGGER = logging.getLogger('AngusSDK')
+
+MULTIPART_HEADER = {
+    "Content-Type": "multipart/x-mixed-replace; boundary=myboundary"
+}
 
 class Configuration(requests_futures.sessions.FuturesSession):
-
+    """A configuration of connection with Angus.ai cloud.
+    """
     def __init__(self):
         super(Configuration, self).__init__(max_workers=10)
         self.auth = None
         self.default_root = None
         self.timeout = None
+        self.verify = True
 
     def set_credential(self, client_id, access_token):
         self.auth = requests.auth.HTTPBasicAuth(client_id, access_token)
@@ -68,6 +74,10 @@ class Configuration(requests_futures.sessions.FuturesSession):
 
 
 class Resource(object):
+    """A resource is the root object of the Angus.ai API,
+    an endpoint with a representation (json).
+    This class can sync with the remote resource, and check the status
+    """
 
     CREATED = 201
     ACCEPTED = 202
@@ -81,21 +91,29 @@ class Resource(object):
 
     @property
     def status(self):
+        """Return the current resource status.
+        """
         if self.representation is not None:
             return self.representation['status']
         else:
             return None
 
     def fetch(self):
-        r = self.conf.get(self.endpoint)
-        r = r.result()
-        r.raise_for_status()
-        self.representation = r.json()
+        """Synchronize with the online resource.
+        """
+        res = self.conf.get(self.endpoint)
+        res = res.result()
+        res.raise_for_status()
+        self.representation = res.json()
 
 
 def generate_encoder(attachments):
+    """Generate a JSON encoder that replaces binary data with
+    reference to an part of multipart request.
+    """
     class Encoder(json.JSONEncoder):
-
+        """The encoder
+        """
         def default(self, o):
             if isinstance(o, Resource):
                 return o.endpoint
@@ -113,8 +131,7 @@ BREAK = "\r\n"
 DBREAK = BREAK+BREAK
 
 def parse(data):
-    """
-    Parse multipart data stream to extract parts.
+    """Parse multipart data stream to extract parts.
     """
     start = data.find("--myboundary\r\n")
     end = data.find(DBREAK, start)
@@ -129,73 +146,100 @@ def parse(data):
             data = data[end+len(BREAK)+content_length:]
     return data, part
 
+def generate_parts(data):
+    """Generate parts for a multipart stream from the generator data.
+    """
+    for params, field, part in data:
+        buff = "\r\n".join(("--myboundary",
+                            "Content-Type: image/jpeg",
+                            "Content-Length: " + str(len(part)),
+                            "X-Angus-DataField: " + field,
+                            "X-Angus-Parameters: " + json.dumps(params),
+                            "",
+                            part,
+                            ""))
+        yield buff
+    yield "--myboundary--"
 
 class Collection(Resource):
-
+    """A collection is a set of Ressources, this class
+    enable creation of sub resource (childs) and list them.
+    """
     def __init__(self, *args, **kargs):
         super(Collection, self).__init__(*args, **kargs)
 
-    def create(self, parameters, resource_type=Resource):
+    def __store(self, res, resource_type, callback):
+        res = res.result()
+        res.raise_for_status()
 
+        result = res.json()
+        callback(resource_type(self.endpoint, result['url'],
+                               representation=result, conf=self.conf))
+
+    def create(self, parameters, resource_type=Resource):
+        """Create a new child resource.
+
+        Arguments:
+        parameters -- the resource creation parameters (default {})
+        resource_type -- The class of the new resource (default Resource)
+        """
         attachments = []
 
         data = json.dumps(parameters, cls=generate_encoder(attachments))
 
         if attachments:
             files = attachments + [('meta', (None, data, 'application/json'))]
-            r = self.conf.post(self.endpoint, files=files)
+            resp = self.conf.post(self.endpoint, files=files)
         else:
             headers = {'content-type': 'application/json'}
-            r = self.conf.post(self.endpoint, data=data, headers=headers)
+            resp = self.conf.post(self.endpoint, data=data, headers=headers)
 
-        r = r.result()
-        r.raise_for_status()
-        result = r.json()
+        result = resp.result()
+        result.raise_for_status()
+        result = result.json()
         return resource_type(
             self.endpoint, result['url'], representation=result, conf=self.conf)
 
-
     def create_async(self, parameters, callback, resource_type=Resource):
+        """Create a new child resource asynchronously.
 
-        def store(res, resource_type, callback):
-            res = res.result()
-            res.raise_for_status()
-
-            result = res.json()
-            callback(resource_type(self.endpoint, result['url'],
-                             representation=result, conf=self.conf))
-
+        Arguments:
+        parameters -- the resource creation parameters (default {})
+        callback -- a callback when resource is created
+        resource_type -- The class of the new resource (default Resource)
+        """
         attachments = []
 
         data = json.dumps(parameters, cls=generate_encoder(attachments))
 
         if self.conf.executor._work_queue.qsize() > self.conf.executor._max_workers:
-            logger.warn("There are too many requests awaiting to "
+            LOGGER.warn("There are too many requests awaiting to "
             "be sent. This request will be added to the queue but please try to decrease "
             "the rate at which \"process\" is called.")
 
 
         if attachments:
             files = attachments + [('meta', (None, data, 'application/json'))]
-            r = self.conf.post(self.endpoint, files=files)
+            resp = self.conf.post(self.endpoint, files=files)
         else:
             headers = {'content-type': 'application/json'}
-            r = self.conf.post(self.endpoint, data=data, headers=headers)
+            resp = self.conf.post(self.endpoint, data=data, headers=headers)
 
-        r.add_done_callback(lambda fut: store(fut, resource_type, callback))
+        resp.add_done_callback(lambda fut: self.__store(fut, resource_type, callback))
         return None
 
     def list(self, filters):
-        r = self.conf.get(self.endpoint, params=filters)
+        """List sub-resources.
+        """
+        resp = self.conf.get(self.endpoint, params=filters)
 
-        r = r.result()
-        r.raise_for_status()
+        resp = resp.result()
+        resp.raise_for_status()
 
-        result = r.json()
+        result = resp.json()
         return result
 
-
-class Session():
+class Session(object):
     """State of the service store in the client
     """
 
@@ -204,6 +248,8 @@ class Session():
         self.id = str(uuid.uuid1())
 
     def state(self):
+        """The session state.
+        """
         # TODO: for a short term, the server code will be statefull, and
         # use a session_id but it is bad, in a near future, client session will store
         # all information need by the service to compute the new result
@@ -228,8 +274,15 @@ class Service(Resource):
         self.default_session = None
         self.session_parameters = None
 
-    def process(
-            self, parameters=None, async=False, session=None, callback=None):
+    def process(self, parameters=None, async=False, session=None, callback=None):
+        """Create a job configurate with
+
+        Arguments:
+        parameters -- the job parameter (default {})
+        async -- request an async job (default False)
+        session -- a session object (default None)
+        callback -- for async jobs, a callback when result is available (default None)
+        """
         if parameters is None:
             parameters = {}
         else:
@@ -257,9 +310,18 @@ class Service(Resource):
                 resource_type=Job)
             return job
 
+    def stream(self, parameters=None, data=None, session=None):
+        """Create a stream object with input and output.
+        Consume data generator and also return a generator for results.
 
-    def stream(
-            self, parameters=None, data=None, session=None):
+        Arguments:
+        parameters -- parameter for stream creation (default {})
+        data -- generator that produces (data_parameters, data_field, data_bin)
+        data_parameters -- parameters for this data "frame"
+        data_field -- the field in parameters set with the binary data
+        data_bin -- the binary data
+        session -- a session object (default None)
+        """
 
         if parameters is None:
             parameters = {}
@@ -282,41 +344,31 @@ class Service(Resource):
         input_url = stream.result["input"]
         output_url = stream.result["output"]
 
-        def parts():
-            for params, field, part in data:
-                buff = "\r\n".join(("--myboundary",
-                                    "Content-Type: image/jpeg",
-                                    "Content-Length: " + str(len(part)),
-                                    "X-Angus-DataField: " + field,
-                                    "X-Angus-Parameters: " + json.dumps(params),
-                                    "",
-                                    part,
-                                    ""))
-                yield buff
-            yield "--myboundary--"
+        self.conf.post(input_url, data=generate_parts(data), stream=True,
+                       headers=MULTIPART_HEADER)
 
-
-        self.conf.post(input_url, data=parts(), stream=True,
-                               headers = {
-                                   "Content-Type": "multipart/x-mixed-replace; boundary=myboundary",
-                               })
-
-        r = requests.get(output_url, stream=True, auth=self.conf.auth, verify=self.conf.verify)
+        resp = requests.get(output_url, stream=True, auth=self.conf.auth, verify=self.conf.verify)
         data = ""
-        for content in r.iter_content(chunk_size=10): # read data as arrived
+        for content in resp.iter_content(chunk_size=10): # read data as arrived
             data = data + content
             data, part = parse(data)
             if part is not None:
                 yield part
 
     def get_description(self):
+        """Return the description of the service
+        """
         return self.description.fetch()
 
     def create_session(self):
+        """Create a new session
+        """
         session = Session(self)
         return session
 
     def enable_session(self, parameters=None):
+        """Create a new session and set it as default in this service.
+        """
         if self.default_session is None:
             self.default_session = self.create_session()
 
@@ -328,6 +380,8 @@ class Service(Resource):
         self.session_parameters = parameters
 
     def disable_session(self):
+        """Remove default session for this service.
+        """
         self.default_session = None
 
 
@@ -340,6 +394,8 @@ class GenericService(Collection):
         super(GenericService, self).__init__(*args, **kargs)
 
     def get_service(self, version=None, service_class=Service):
+        """Get a versioned service.
+        """
         description = self.list({'version': version})
         description = description['versions']
 
@@ -351,10 +407,9 @@ class GenericService(Collection):
         return service_class(self.endpoint, description['url'],
                              conf=self.conf)
 
-
 class Job(Resource):
 
-    """A job is a compute task in the cloud
+    """A job is a compute task in the cloud.
     """
 
     def __init__(self, *args, **kargs):
@@ -362,4 +417,7 @@ class Job(Resource):
 
     @property
     def result(self):
+        """Get the result of the job, i.e. the representation
+        of the job resource.
+        """
         return self.representation

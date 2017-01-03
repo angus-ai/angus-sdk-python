@@ -19,13 +19,12 @@
 
 import copy
 import json
+import six
 
 from angus import rest
 import angus
-import six
 
-
-__updated__ = "2017-01-02"
+__updated__ = "2017-01-03"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -33,15 +32,18 @@ __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
-
 class BlobDirectory(rest.Collection):
-
+    """ Store binary data.
+    """
     def create(self, binary):
         return super(BlobDirectory, self).create(
             parameters={'content': binary})
 
 
 def generate_encoder(root):
+    """ Replace binary data in python data structure by uploading
+    it as a blob in Angus.ai cloud and set an endpoint.
+    """
     class Encoder(json.JSONEncoder):
 
         def default(self, o):
@@ -55,6 +57,8 @@ def generate_encoder(root):
 
 
 class CompositeService(rest.Resource):
+    """ Call several services as if it were only one.
+    """
 
     def __init__(self, *args, **kwargs):
         self.services = kwargs.pop("services")
@@ -64,6 +68,14 @@ class CompositeService(rest.Resource):
         self.session_parameters = None
 
     def process(self, parameters, async=False, session=None, callback=None):
+        """Create a job configurate with
+
+        Arguments:
+        parameters -- the job parameter (default {})
+        async -- request an async job (default False)
+        session -- a session object (default None)
+        callback -- for async jobs, a callback when result is available (default None)
+        """
         if parameters is None:
             parameters = {}
         else:
@@ -89,20 +101,20 @@ class CompositeService(rest.Resource):
             if attachments:
                 files = attachments + \
                     [('meta', (None, data, 'application/json'))]
-                r = self.conf.post(service.jobs.endpoint, files=files)
+                resp = self.conf.post(service.jobs.endpoint, files=files)
             else:
                 headers = {'content-type': 'application/json'}
-                r = self.conf.post(
+                resp = self.conf.post(
                     service.jobs.endpoint,
                     data=data,
                     headers=headers)
-            futures.append((name, r))
+            futures.append((name, resp))
 
         result = {}
-        for (name, r) in futures:
-            r = r.result()
-            if r.status_code < 400:
-                result[name] = r.json()
+        for (name, resp) in futures:
+            resp = resp.result()
+            if resp.status_code < 400:
+                result[name] = resp.json()
 
         result["status"] = 200
 
@@ -115,10 +127,14 @@ class CompositeService(rest.Resource):
         return job
 
     def create_session(self):
+        """Create a new session
+        """
         session = rest.Session(self)
         return session
 
     def enable_session(self, parameters=None):
+        """Create a new session and set it as default in this service.
+        """
         if self.default_session is None:
             self.default_session = self.create_session()
 
@@ -130,12 +146,22 @@ class CompositeService(rest.Resource):
         self.session_parameters = parameters
 
     def disable_session(self):
+        """Remove default session for this service.
+        """
         self.default_session = None
 
 
 class ServiceDirectory(rest.Collection):
+    """The collection of services.
+    """
 
     def get_service(self, name, version=None, service_class=rest.Service):
+        """Get an unique service by name and version.
+
+        Arguments:
+        name -- name of the service
+        version -- the version of the service
+        """
         description = self.list({'name': name})
         description = description['services']
         if name in description:
@@ -151,6 +177,11 @@ class ServiceDirectory(rest.Collection):
         return service
 
     def get_services(self, services=None):
+        """Get a generic services by name.
+
+        Arguments:
+        services -- list of name or list of tuple (name, version)
+        """
         description = self.list({})
         description = description['services']
         if services is None:
@@ -172,6 +203,9 @@ class ServiceDirectory(rest.Collection):
 
 
 class Root(rest.Resource):
+    """The root resource of the Angus.ai cloud.
+    With blobs and services collections.
+    """
 
     def __init__(self, url=None, conf=None):
         if conf is None:
