@@ -25,7 +25,8 @@ import os
 import pkgutil
 import sys
 
-import angus
+import requests
+
 import angus.cloud
 import angus.rest
 import angus.version
@@ -34,7 +35,7 @@ import angus.version
 __path__ = pkgutil.extend_path(__path__, __name__)
 
 __version__ = angus.version.__version__
-__updated__ = "2017-01-02"
+__updated__ = "2017-01-03"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -44,6 +45,7 @@ __status__ = "Production"
 
 logger = logging.getLogger('AngusSDK')
 
+requests.packages.urllib3.disable_warnings()
 
 def parse_cmd_line(argv):
     """Parse command line argument. See -h option
