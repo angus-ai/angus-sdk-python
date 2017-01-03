@@ -43,13 +43,12 @@ __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
-logger = logging.getLogger('AngusSDK')
+LOGGER = logging.getLogger('AngusSDK')
 
 requests.packages.urllib3.disable_warnings()
 
 def parse_cmd_line(argv):
-    """Parse command line argument. See -h option
-
+    """Parse command line argument. See -h option.
     """
     formattter_class = argparse.RawDescriptionHelpFormatter
 
@@ -84,11 +83,13 @@ def parse_cmd_line(argv):
 
 
 def get_default_configuration(argv=""):
+    """Get and parse the default configuration in ~/.angusdk/config.json
+    """
     args = parse_cmd_line(argv)
 
     # Set the logger level
     logging.basicConfig()
-    logger.setLevel(max(3 - args.vlevel, 0) * 10)
+    LOGGER.setLevel(max(3 - args.vlevel, 0) * 10)
 
     # Get the configuration file
     default_file = os.path.expanduser("~/.angusdk/config.json")
@@ -96,9 +97,8 @@ def get_default_configuration(argv=""):
         if os.path.isfile(args.configuration):
             conf_file = args.configuration
         else:
-            logger.error(
-                "The configuration file '%s' does not exist" %
-                args.configuration)
+            LOGGER.error("The configuration file '%s' does not exist",
+                         args.configuration)
             sys.exit(-1)
     elif os.path.isfile(default_file):
         conf_file = default_file
@@ -109,8 +109,8 @@ def get_default_configuration(argv=""):
 
     # Apply the configuration file if it exists
     if conf_file is not None:
-        with open(conf_file, 'r') as f:
-            conf_data = json.loads(f.read())
+        with open(conf_file, 'r') as conf:
+            conf_data = json.loads(conf.read())
             if 'client_id'in conf_data and 'access_token' in conf_data:
                 conf.set_credential(
                     conf_data['client_id'],
@@ -136,6 +136,8 @@ def get_default_configuration(argv=""):
 
 def connect(url=None, conf=None, client_id=None,
             access_token=None, verify=True):
+    """Create a resource root with the given configuration.
+    """
     if None not in [client_id, access_token]:
         conf = angus.rest.Configuration()
         conf.set_credential(client_id, access_token)
