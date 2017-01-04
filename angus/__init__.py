@@ -35,7 +35,7 @@ import angus.version
 __path__ = pkgutil.extend_path(__path__, __name__)
 
 __version__ = angus.version.__version__
-__updated__ = "2017-01-03"
+__updated__ = "2017-01-04"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -109,8 +109,8 @@ def get_default_configuration(argv=""):
 
     # Apply the configuration file if it exists
     if conf_file is not None:
-        with open(conf_file, 'r') as conf:
-            conf_data = json.loads(conf.read())
+        with open(conf_file, 'r') as fconf:
+            conf_data = json.loads(fconf.read())
             if 'client_id'in conf_data and 'access_token' in conf_data:
                 conf.set_credential(
                     conf_data['client_id'],
