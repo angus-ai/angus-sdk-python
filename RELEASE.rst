@@ -4,6 +4,15 @@ Angus python SDK - Release Note v0.0.11
 Bug fixed
 ---------
 
+* Typo in default configuration loader
+
+
+Angus python SDK - Release Note v0.0.11
+=======================================
+
+Bug fixed
+---------
+
 * Update support information
 
 Features added
