@@ -1,4 +1,13 @@
-Angus python SDK - Release Note v0.0.11
+Angus python SDK - Release Note v0.0.13
+=======================================
+
+Bug fixed
+---------
+
+* Relieve constraints on requests dependency
+
+
+Angus python SDK - Release Note v0.0.12
 =======================================
 
 Bug fixed

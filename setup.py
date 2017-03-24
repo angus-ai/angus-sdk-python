@@ -21,7 +21,7 @@
 from setuptools import setup, find_packages
 
 
-__updated__ = "2017-01-03"
+__updated__ = "2017-03-24"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennaël Gâté"]
@@ -41,7 +41,7 @@ setup(name='angus-sdk-python',
       author_email='aurelien.moreau@yienyien.net',
       url='http://www.angus.ai/',
       install_requires=[
-          "requests==2.6.0",  # fixme: issue with the ssl and python version
+          "requests",
           "argparse==1.2.1",
           "pytest==2.6.4",
           "six",
