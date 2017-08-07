@@ -22,11 +22,11 @@ import time
 
 import pytest
 
-import angus
+import angus.client
+from angus.client.rest import Resource
 import fake_camera
 
-
-__updated__ = "2017-01-02"
+__updated__ = "2017-08-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -39,7 +39,7 @@ IMG_1 = 'Angus-6.jpg'
 
 @pytest.fixture(scope="module")
 def root(server, client, token, verify):
-    return angus.connect(
+    return angus.client.connect(
         url=server, client_id=client, access_token=token, verify=verify)
 
 
@@ -64,15 +64,15 @@ def image_res(root):
 
 
 def check_result_res(result_res, howmany=1):
-    isinstance(result_res, angus.rest.Resource)
+    isinstance(result_res, Resource)
     assert result_res.status == 200
     assert result_res.representation == result_res.result
 
 
 def check_result_res_eventually(result_res, howmany=1):
-    isinstance(result_res, angus.rest.Resource)
+    isinstance(result_res, Resource)
 
-    if result_res.status == angus.rest.Resource.ACCEPTED:
+    if result_res.status == Resource.ACCEPTED:
         time.sleep(10)
         result_res.fetch()
 
@@ -126,7 +126,7 @@ def test_session(all_services):
 
 
 def test_composite_return_name(server, client, token, verify):
-    conn = angus.connect(
+    conn = angus.client.connect(
         url=server,
         client_id=client,
         access_token=token,

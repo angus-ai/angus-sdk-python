@@ -21,7 +21,7 @@
 from setuptools import setup, find_packages
 
 
-__updated__ = "2017-03-24"
+__updated__ = "2017-08-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennaël Gâté"]
@@ -30,7 +30,7 @@ __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
 __version__ = None
-version_file = 'angus/version.py'
+version_file = 'angus/client/version.py'
 exec(compile(open(version_file, 'rb').read(), version_file, 'exec'))
 
 

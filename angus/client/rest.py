@@ -29,7 +29,7 @@ import requests
 import requests_futures.sessions
 
 
-__updated__ = "2017-01-03"
+__updated__ = "2017-08-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]

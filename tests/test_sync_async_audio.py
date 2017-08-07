@@ -21,11 +21,11 @@ import time
 
 import pytest
 
-import angus.cloud
-import angus.rest
+import angus.client
+from angus.client.rest import Resource
 
 
-__updated__ = "2017-01-02"
+__updated__ = "2017-08-07"
 __author__ = "Gwennael Gate"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -59,16 +59,16 @@ def session(service):
 
 
 def check_result_res(result_res, howmany=1):
-    isinstance(result_res, angus.rest.Resource)
-    assert result_res.status == angus.rest.Resource.CREATED
+    isinstance(result_res, Resource)
+    assert result_res.status == Resource.CREATED
     assert result_res.representation == result_res.result
 
 
 
 def check_result_res_eventually(result_res, howmany=1):
-    isinstance(result_res, angus.rest.Resource)
+    isinstance(result_res, Resource)
 
-    if result_res.status == angus.rest.Resource.ACCEPTED:
+    if result_res.status == Resource.ACCEPTED:
         time.sleep(10)
         result_res.fetch()
 
