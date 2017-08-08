@@ -35,7 +35,7 @@ import angus.version
 __path__ = pkgutil.extend_path(__path__, __name__)
 
 __version__ = angus.version.__version__
-__updated__ = "2017-01-04"
+__updated__ = "2017-08-08"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -92,7 +92,7 @@ def get_default_configuration(argv=""):
     LOGGER.setLevel(max(3 - args.vlevel, 0) * 10)
 
     # Get the configuration file
-    default_file = os.path.expanduser("~/.angusdk/config.json")
+    default_file = os.path.realpath("./config.json")
     if args.configuration is not None:
         if os.path.isfile(args.configuration):
             conf_file = args.configuration
@@ -103,7 +103,12 @@ def get_default_configuration(argv=""):
     elif os.path.isfile(default_file):
         conf_file = default_file
     else:
-        conf_file = None
+        default_file = os.path.expanduser("~/.angusdk/config.json")
+
+        if os.path.isfile(default_file):
+            conf_file = default_file
+        else:
+            conf_file = None
 
     conf = angus.rest.Configuration()
 
