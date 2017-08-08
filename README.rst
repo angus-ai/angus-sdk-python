@@ -92,7 +92,7 @@ Here is the same simple example but with a non-blocking call to 'process'. The p
 Go further
 ----------
 
-- The complete API documentation is available `here <http://angus-doc.readthedocs.io/en/latest/services/index.html>`_.
+- The complete API documentation is available `here <http://doc.angus.ai>`_.
 - See "Discussion and support" bellow.
 
 
