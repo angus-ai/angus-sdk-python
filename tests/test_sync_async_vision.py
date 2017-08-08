@@ -17,6 +17,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
+import datetime
 import io
 import time
 
@@ -27,7 +28,7 @@ from angus.client.rest import Resource
 import fake_camera
 
 
-__updated__ = "2017-08-07"
+__updated__ = "2017-08-08"
 __author__ = "Gwennael Gate"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -150,12 +151,16 @@ def test_embeded_async_client_2(service):
 def test_default_session(service):
     service.enable_session()
     camera = fake_camera.Camera("./video1")
+    dt = datetime.timedelta(seconds=0.1)
+    date = datetime.datetime.now()
     while camera.has_next():
         img = io.BytesIO(camera.next())
         result_res = service.process(
             parameters={
-                'image': img
+                'image': img,
+                'timestamp': date.isoformat(),
             })
+        date = date + dt
         check_result_res_eventually(result_res)
 
     service.disable_session()
