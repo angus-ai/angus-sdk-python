@@ -23,12 +23,12 @@ import io
 
 import pytest
 
-import angus.cloud
-import angus.rest
+import angus.client
+from angus.client.rest import Resource
 import fake_camera
 
 
-__updated__ = "2017-01-02"
+__updated__ = "2017-08-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -63,8 +63,8 @@ def image_res_3(root):
 
 
 def check_result_res(result_res, howmany=1):
-    isinstance(result_res, angus.rest.Resource)
-    assert result_res.status == angus.rest.Resource.CREATED
+    isinstance(result_res, Resource)
+    assert result_res.status == Resource.CREATED
     assert result_res.representation == result_res.result
     assert 'faces' in result_res.representation
     t_min = math.ceil(0.5 * howmany)
@@ -76,9 +76,9 @@ def check_result_res(result_res, howmany=1):
 
 
 def check_result_res_eventually(result_res, howmany=1):
-    isinstance(result_res, angus.rest.Resource)
+    isinstance(result_res, Resource)
 
-    if result_res.status == angus.rest.Resource.ACCEPTED:
+    if result_res.status == Resource.ACCEPTED:
         time.sleep(10)
         result_res.fetch()
 

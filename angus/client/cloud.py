@@ -21,10 +21,10 @@ import copy
 import json
 import six
 
-from angus import rest
+from angus.client import rest
 import angus
 
-__updated__ = "2017-01-03"
+__updated__ = "2017-08-07"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate"]
@@ -209,7 +209,7 @@ class Root(rest.Resource):
 
     def __init__(self, url=None, conf=None):
         if conf is None:
-            conf = angus.get_default_configuration()
+            conf = angus.client.get_default_configuration()
 
         if url is None:
             url = conf.default_root
