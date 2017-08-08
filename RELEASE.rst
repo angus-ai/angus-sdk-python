@@ -1,3 +1,22 @@
+Angus python SDK - Release Note v0.0.14
+=======================================
+
+Bug fixed
+---------
+
+* Fix the bad angus namespace design
+
+Features added
+--------------
+
+* Looking for a local `config.json` file before using the global one.
+
+Deprecation
+-----------
+
+* All the client SDK is now in `angus.client` module.
+  **Please use** `angus.client.connect()`  **instead of** `angus.connect()`
+
 Angus python SDK - Release Note v0.0.13
 =======================================
 
