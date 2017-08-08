@@ -106,7 +106,7 @@ def get_default_configuration(argv=""):
         else:
             conf_file = None
 
-    conf = angus.rest.Configuration()
+    conf = angus.client.rest.Configuration()
 
     # Apply the configuration file if it exists
     if conf_file is not None:
