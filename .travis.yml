@@ -1,0 +1,11 @@
+language: python
+python:
+  - '3.5'
+  - '3.4'
+  - '2.7'
+
+install: "pip install ."
+
+before_script: "cd tests/"
+
+script: py.test --root=https://gate.angus.ai --client_id=7f5933d2-cd7c-11e4-9fe6-490467a5e114 --access_token=db19c01e-18e5-4fc2-8b81-7b3d1f44533b
