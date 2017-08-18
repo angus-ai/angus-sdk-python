@@ -29,10 +29,10 @@ import requests
 import requests_futures.sessions
 
 
-__updated__ = "2017-08-07"
+__updated__ = "2017-08-18"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
-__credits__ = ["Aurélien Moreau", "Gwennael Gate"]
+__credits__ = ["Aurélien Moreau", "Gwennael Gate", "Raphaël Lumbroso"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
@@ -150,16 +150,19 @@ def generate_parts(data):
     """Generate parts for a multipart stream from the generator data.
     """
     for params, field, part in data:
-        buff = "\r\n".join(("--myboundary",
-                            "Content-Type: image/jpeg",
-                            "Content-Length: " + str(len(part)),
-                            "X-Angus-DataField: " + field,
-                            "X-Angus-Parameters: " + json.dumps(params),
-                            "",
-                            part,
-                            ""))
-        yield buff
-    yield "--myboundary--"
+        parts = [
+            "--myboundary",
+            "Content-Type: image/jpeg",
+            "Content-Length: " + str(len(part)),
+            "X-Angus-DataField: " + field,
+            "X-Angus-Parameters: " + json.dumps(params),
+            ""
+        ]
+        yield "".join(map(lambda t: t+"\r\n", parts)).encode()
+        # part is yielded separately as it is a bytearray
+        yield part
+        yield b"\r\n"
+    yield b"--myboundary--"
 
 class Collection(Resource):
     """A collection is a set of Ressources, this class
@@ -349,7 +352,7 @@ class Service(Resource):
 
         resp = requests.get(output_url, stream=True, auth=self.conf.auth, verify=self.conf.verify)
         data = ""
-        for content in resp.iter_content(chunk_size=10): # read data as arrived
+        for content in resp.iter_content(chunk_size=10, decode_unicode=True): # read data as arrived
             data = data + content
             data, part = parse(data)
             if part is not None:

@@ -21,10 +21,10 @@
 from setuptools import setup, find_packages
 
 
-__updated__ = "2017-08-07"
+__updated__ = "2017-08-18"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
-__credits__ = ["Aurélien Moreau", "Gwennaël Gâté"]
+__credits__ = ["Aurélien Moreau", "Gwennaël Gâté", "Raphaël Lumbroso"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
@@ -43,7 +43,7 @@ setup(name='angus-sdk-python',
       install_requires=[
           "requests",
           "argparse==1.2.1",
-          "pytest==2.6.4",
+          "pytest",
           "six",
           "requests-futures",
           "pytz",
