@@ -20,7 +20,7 @@
 
 import logging
 import pkgutil
-import client
+import angus.client
 
 LOGGER = logging.getLogger('AngusSDK')
 
@@ -28,4 +28,4 @@ __path__ = pkgutil.extend_path(__path__, __name__)
 
 def connect(*args, **kwargs):
     LOGGER.warning("Call to deprecated function angus.connect. Please use angus.client.connect")
-    return client.connect(*args, **kwargs)
+    return angus.client.connect(*args, **kwargs)
