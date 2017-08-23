@@ -30,11 +30,11 @@ import pytest
 
 def pytest_addoption(parser):
     parser.addoption("--root", action="store", help="targeted server",
-                     default="https://gate.angus.ai")
+                     default=None)
     parser.addoption("--client_id", action="store", help="client id",
-                     default="7f5933d2-cd7c-11e4-9fe6-490467a5e114")
+                     default=None)
     parser.addoption("--access_token", action="store", help="access token",
-                     default="db19c01e-18e5-4fc2-8b81-7b3d1f44533b")
+                     default=None)
     parser.addoption("--verify", dest='verify',
                      action="store_true", help="ssl verification")
     parser.addoption("--not-verify", dest='verify',
