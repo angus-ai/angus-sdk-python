@@ -1,8 +1,8 @@
 Angus Python SDK's documentation
 ================================
 
-Angus Python SDK is a python client library for `Angus.ai <http://www.angus.ai>`_ perception web services.
-Please look at Angus.ai full API `here <http://angus-doc.readthedocs.io/en/latest/services/index.html>`_.
+Angus Python SDK is a python client library for `Angus.ai <https://www.angus.ai>`_ perception web services.
+Please look at Angus.ai full API `here <http://doc.angus.ai>`_.
 
 
 Installation
@@ -40,7 +40,7 @@ You can explore all options by typing:
 Configuration
 -------------
 
-In order to authenticate your request to Angus.ai servers, you must register `here <http://www.angus.ai/request-credentials/>`_, and use the provided credentials as shown below.
+In order to authenticate your request to Angus.ai servers, you must register `here <https://www.angus.ai/request-credentials/>`_, and use the provided credentials as shown below.
 It is free and takes 1 minute.
 
 In a terminal, type:
@@ -63,30 +63,14 @@ In that case use this command instead (replace by your Python installation path)
 Hello, world
 ------------
 
-Here is a simple "Hello, world" example for Angus SDK (replace macgyver.jpg by your own image with a face to detect)::
+Here is a simple "Hello, world" example for Angus SDK (replace macgyver.jpg by your own image with a face to detect):
 
      import angus
 
      conn = angus.connect()
      service = conn.services.get_service('face_detection', version=1)
-     job = service.process({'image': open('./macgyver.jpg')})
+     job = service.process({'image': open('./macgyver.jpg', 'rb')})
      print(job.result['faces'])
-
-
-Hello, world (asynchronous)
----------------------------
-
-Here is the same simple example but with a non-blocking call to 'process'. The provided callback is called whenever the request terminates::
-
-    import angus
-
-    def f(job):
-        print(job.result['faces'])
-
-    conn = angus.connect()
-    service = conn.services.get_service('face_detection', version=1)
-    job = service.process({'image': open('./macgyver.jpg')}, callback=f)
-    ### do stuff here while waiting for the server response.
 
 
 Go further
