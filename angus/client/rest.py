@@ -29,7 +29,7 @@ import requests
 import requests_futures.sessions
 
 
-__updated__ = "2017-08-18"
+__updated__ = "2017-08-23"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate", "Raphaël Lumbroso"]
@@ -105,6 +105,28 @@ class Resource(object):
         res = res.result()
         res.raise_for_status()
         self.representation = res.json()
+
+
+def result_decorator(result_fn, resource_type, endpoint, conf):
+    """
+    Decorator used to return a Resource object instead of an HTTPResponse
+    when getting the result of a Future during an asynchronous call to a
+    service
+
+    :param result_fn: The real result function to decorate
+    :param resource_type: The class of the Resource to return
+    :param endpoint: The endpoint used to create the Resource
+    :param conf: The Configuration object used to create the Resource
+    :return: A <resource_type> object with the Future result encapsulated in it
+    """
+    def handler(*args, **kwargs):
+        res = result_fn(*args, **kwargs)
+        res.raise_for_status()
+
+        result = res.json()
+        return resource_type(endpoint, result['url'],
+                             representation=result, conf=conf)
+    return handler
 
 
 def generate_encoder(attachments):
@@ -203,7 +225,7 @@ class Collection(Resource):
         return resource_type(
             self.endpoint, result['url'], representation=result, conf=self.conf)
 
-    def create_async(self, parameters, callback, resource_type=Resource):
+    def create_async(self, parameters, resource_type=Resource):
         """Create a new child resource asynchronously.
 
         Arguments:
@@ -227,9 +249,8 @@ class Collection(Resource):
         else:
             headers = {'content-type': 'application/json'}
             resp = self.conf.post(self.endpoint, data=data, headers=headers)
-
-        resp.add_done_callback(lambda fut: self.__store(fut, resource_type, callback))
-        return None
+        resp.result = result_decorator(resp.result, resource_type, self.endpoint, self.conf)
+        return resp
 
     def list(self, filters):
         """List sub-resources.
@@ -277,14 +298,13 @@ class Service(Resource):
         self.default_session = None
         self.session_parameters = None
 
-    def process(self, parameters=None, async=False, session=None, callback=None):
+    def process(self, parameters=None, async=False, session=None):
         """Create a job configurate with
 
         Arguments:
         parameters -- the job parameter (default {})
         async -- request an async job (default False)
         session -- a session object (default None)
-        callback -- for async jobs, a callback when result is available (default None)
         """
         if parameters is None:
             parameters = {}
@@ -302,16 +322,39 @@ class Service(Resource):
 
         parameters['async'] = async
 
-        if callback:
-            job = self.jobs.create_async(
-                parameters,
-                callback,
-                resource_type=Job)
+        job = self.jobs.create(
+            parameters,
+            resource_type=Job)
+        return job
+
+    def process_async(self, parameters=None, async=False, session=None):
+        """Create an asynchronous job configurate with
+
+        Arguments:
+        parameters -- the job parameter (default {})
+        async -- request an async job (default False)
+        session -- a session object (default None)
+        """
+        if parameters is None:
+            parameters = {}
         else:
-            job = self.jobs.create(
-                parameters,
-                resource_type=Job)
-            return job
+            parameters = copy.copy(parameters)
+
+        if self.session_parameters is not None:
+            parameters.update(self.session_parameters)
+
+        if session is None:
+            session = self.default_session
+
+        if session is not None:
+            parameters['state'] = session.state()
+
+        parameters['async'] = async
+
+        fut = self.jobs.create_async(
+            parameters,
+            resource_type=Job)
+        return fut
 
     def stream(self, parameters=None, data=None, session=None):
         """Create a stream object with input and output.
