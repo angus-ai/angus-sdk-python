@@ -45,7 +45,7 @@ def service_name(request):
 
 @pytest.fixture(scope="module")
 def root(server, client, token, verify):
-    return angus.connect(
+    return angus.client.connect(
         url=server, client_id=client, access_token=token, verify=verify)
 
 @pytest.fixture(scope="module")
@@ -79,7 +79,7 @@ def check_result_res_none(result_res):
 
 
 def test_connect(server, client, token, verify, service_name):
-    conn = angus.connect(
+    conn = angus.client.connect(
         url=server,
         client_id=client,
         access_token=token,

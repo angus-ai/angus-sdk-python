@@ -22,7 +22,7 @@ import Queue
 import StringIO
 import wave
 
-import angus.cloud
+import angus.client
 import pyaudio
 
 __updated__ = "2017-01-02"
@@ -50,7 +50,7 @@ print p.get_device_info_by_host_api_device_index(0, INDEX)
 print
 print
 
-conn = angus.connect()
+conn = angus.client.connect()
 service = conn.services.get_service('sound_localization', version=1)
 
 stream_queue = Queue.Queue()

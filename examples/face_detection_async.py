@@ -18,7 +18,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import angus.cloud
+import angus.client
 import time
 
 __updated__ = "2017-01-02"
@@ -36,7 +36,7 @@ def async_res(job):
 
 def main():
     # Get the conn resource of Angus Cloud
-    conn = angus.connect()
+    conn = angus.client.connect()
 
     # Get the service 'face_detection' in version 1
     service = conn.services.get_service('face_detection', version=1)

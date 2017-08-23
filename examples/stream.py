@@ -20,14 +20,10 @@
 import json
 import datetime
 
-import angus
+import angus.client
 import pytz
 
-c = angus.connect(url="https://mgate.angus.ai",
-              client_id="",
-              access_token="",
-              verify=False)
-
+c = angus.client.connect()
 s = c.services.get_service("scene_analysis")
 s.enable_session()
 
