@@ -24,10 +24,10 @@ import six
 from angus.client import rest
 import angus
 
-__updated__ = "2017-08-07"
+__updated__ = "2017-08-23"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
-__credits__ = ["Aurélien Moreau", "Gwennael Gate"]
+__credits__ = ["Aurélien Moreau", "Gwennael Gate", "Raphaël Lumbroso"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
@@ -67,14 +67,12 @@ class CompositeService(rest.Resource):
         self.default_session = None
         self.session_parameters = None
 
-    def process(self, parameters, async=False, session=None, callback=None):
+    def process(self, parameters, session=None):
         """Create a job configurate with
 
         Arguments:
         parameters -- the job parameter (default {})
-        async -- request an async job (default False)
         session -- a session object (default None)
-        callback -- for async jobs, a callback when result is available (default None)
         """
         if parameters is None:
             parameters = {}
@@ -89,8 +87,6 @@ class CompositeService(rest.Resource):
 
         if session is not None:
             parameters['state'] = session.state()
-
-        parameters['async'] = async
 
         attachments = []
 
@@ -120,9 +116,6 @@ class CompositeService(rest.Resource):
 
         job = rest.Job(
             self.endpoint, "", representation=result, conf=self.conf)
-
-        if job.status == rest.Resource.CREATED and callback:
-            callback(job)
 
         return job
 
