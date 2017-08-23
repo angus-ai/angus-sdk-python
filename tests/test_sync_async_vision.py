@@ -28,10 +28,10 @@ from angus.client.rest import Resource
 import fake_camera
 
 
-__updated__ = "2017-08-08"
+__updated__ = "2017-08-23"
 __author__ = "Gwennael Gate"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
-__credits__ = ["Aurélien Moreau", "Gwennael Gate"]
+__credits__ = ["Aurélien Moreau", "Gwennael Gate", "Raphaël Lumbroso"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
@@ -95,6 +95,7 @@ def check_result_res_eventually(result_res, howmany=1):
 
     check_result_res(result_res, howmany)
 
+
 def check_result_res_none(result_res):
     assert result_res == None
 
@@ -109,14 +110,15 @@ def test_connect(server, client, token, verify, service_name):
     assert service is not None
 
 
-def test_embeded_sync(service):
+def test_embedded_sync_client_sync_server(service):
     result_res = service.process(
         parameters={
             'image': open(IMG_1, 'rb')},
         async=False)
     check_result_res(result_res)
 
-def test_embeded_async_server(service):
+
+def test_embedded_sync_client_async_server(service):
     result_res = service.process(
         parameters={
             'image': open(IMG_1, 'rb')},
@@ -124,28 +126,30 @@ def test_embeded_async_server(service):
     check_result_res_eventually(result_res)
 
 
-def test_embeded_async_client(service):
-    result_res = service.process(
+def test_embedded_async_client_sync_server(service):
+    result_res_fut = service.process_async(
         parameters={
             'image': open(IMG_1, 'rb')},
-            callback=check_result_res)
-    check_result_res_none(result_res)
+        async=False)
+    res = result_res_fut.result()
+    check_result_res(res)
 
-def test_embeded_async_client_server(service):
-    result_res = service.process(
+def test_embedded_async_client_async_server(service):
+    result_res_fut = service.process_async(
         parameters={
             'image': open(IMG_1, 'rb')},
-        callback=check_result_res_eventually,
         async = True)
-    check_result_res_none(result_res)
+    res = result_res_fut.result()
+    check_result_res_eventually(res)
 
 
-def test_embeded_async_client_2(service):
-    result_res = service.process(
+def test_embedded_async_client_2(service):
+    result_res_fut = service.process_async(
         parameters={
             'image': open(IMG_3, 'rb')},
-        callback=lambda x: check_result_res(x, 3), async=False)
-    check_result_res_none(result_res)
+        async=False)
+    res = result_res_fut.result()
+    check_result_res(res, 3)
 
 
 def test_default_session(service):

@@ -21,16 +21,17 @@
 import angus.client
 import time
 
-__updated__ = "2017-01-02"
+__updated__ = "2017-08-23"
 __author__ = "Gwennael Gate"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
-__credits__ = ["Aurélien Moreau", "Gwennael Gate"]
+__credits__ = ["Aurélien Moreau", "Gwennael Gate", "Raphaël Lumbroso"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
 
 
-def async_res(job):
+def async_res(fut):
+    job = fut.result()
     # Print the result of the job.
     print(job.result['faces'])
 
@@ -42,11 +43,15 @@ def main():
     service = conn.services.get_service('face_detection', version=1)
 
     # Submit a new job to the service, and get the result asynchronously
-    job = service.process({'image': open('macgyver.jpg')}, callback=async_res)
+    job_future = service.process_async({'image': open('macgyver.jpg', 'rb')})
 
-    # Wait for the asynchronous result to be printed
-    time.sleep(10)
+    # You can either work in the future callback to get the result
+    job_future.add_done_callback(async_res)
+    print("You can do something else here")
 
+    # Or wait directly for the result in the main function :
+    # res = job_future.result()
+    # print(res.result['faces'])
 
 if __name__ == '__main__':
     main()
