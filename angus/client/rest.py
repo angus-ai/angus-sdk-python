@@ -193,14 +193,6 @@ class Collection(Resource):
     def __init__(self, *args, **kargs):
         super(Collection, self).__init__(*args, **kargs)
 
-    def __store(self, res, resource_type, callback):
-        res = res.result()
-        res.raise_for_status()
-
-        result = res.json()
-        callback(resource_type(self.endpoint, result['url'],
-                               representation=result, conf=self.conf))
-
     def create(self, parameters, resource_type=Resource):
         """Create a new child resource.
 
@@ -241,7 +233,6 @@ class Collection(Resource):
             LOGGER.warn("There are too many requests awaiting to "
             "be sent. This request will be added to the queue but please try to decrease "
             "the rate at which \"process\" is called.")
-
 
         if attachments:
             files = attachments + [('meta', (None, data, 'application/json'))]
