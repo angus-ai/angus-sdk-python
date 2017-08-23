@@ -20,10 +20,10 @@
 
 import angus.client
 
-__updated__ = "2017-01-02"
+__updated__ = "2017-08-23"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
-__credits__ = ["Aurélien Moreau", "Gwennael Gate"]
+__credits__ = ["Aurélien Moreau", "Gwennael Gate", "Raphaël Lumbroso"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
@@ -37,7 +37,7 @@ def main():
     service = conn.services.get_service('face_detection', version=1)
 
     # Submit a new job to the service, and get the result synchronously
-    job = service.process({'image': open('macgyver.jpg')})
+    job = service.process({'image': open('macgyver.jpg', 'rb')})
 
     # Print the result of the job.
     print(job.result['faces'])

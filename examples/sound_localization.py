@@ -18,8 +18,15 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import Queue
-import StringIO
+try:
+    import Queue
+except ImportError:
+    import queue as Queue
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 import wave
 
 import angus.client
@@ -28,7 +35,7 @@ import pyaudio
 __updated__ = "2017-01-02"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
-__credits__ = ["Aurélien Moreau", "Gwennael Gate"]
+__credits__ = ["Aurélien Moreau", "Gwennael Gate", "Raphaël Lumbroso"]
 __license__ = "Apache v2.0"
 __maintainer__ = "Aurélien Moreau"
 __status__ = "Production"
@@ -38,17 +45,18 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 48000
 RECORD_SECONDS = 2
-INDEX = 3  # USB Cam
 WAVE_OUTPUT_FILENAME = "output.wav"
 
 p = pyaudio.PyAudio()
+host_info = p.get_default_host_api_info()
+INDEX = host_info['defaultInputDevice']
 
-print p.get_default_host_api_info()
-print
-print
-print p.get_device_info_by_host_api_device_index(0, INDEX)
-print
-print
+print(host_info)
+print()
+print()
+print(p.get_device_info_by_host_api_device_index(0, INDEX))
+print()
+print()
 
 conn = angus.client.connect()
 service = conn.services.get_service('sound_localization', version=1)
@@ -72,11 +80,12 @@ stream = p.open(format=FORMAT,
 
 print("* recording")
 stream.start_stream()
-
-while(True):
+j = 0
+while j < 30:
     frames = []
+    j += 1
 
-    for i in range(RATE / CHUNK / 2):
+    for i in range(int(RATE / CHUNK / 2)):
         data = stream_queue.get()
         frames.append(data)
 
@@ -87,7 +96,13 @@ while(True):
     wf.writeframes(b''.join(frames))
     wf.close()
 
-    job = service.process({'sound': open(WAVE_OUTPUT_FILENAME)})
+    job = service.process(
+        {
+            'sound': open(WAVE_OUTPUT_FILENAME, 'rb'),
+            'sensitivity': 1.0,
+            'baseline': 1.0,
+        }
+    )
 
     print(job.result)
 
