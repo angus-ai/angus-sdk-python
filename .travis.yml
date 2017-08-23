@@ -9,9 +9,9 @@ install: "pip install ."
 before_script:
   - 'cd tests/'
   - 'echo "https://gate.angus.ai" >> config_input.txt'
-  - 'echo "7f5933d2-cd7c-11e4-9fe6-490467a5e114" >> config_input.txt'
-  - 'echo "db19c01e-18e5-4fc2-8b81-7b3d1f44533b" >> config_input.txt'
+  - 'echo "58a8ac90-8b0d-11e6-ba22-0242ac110002" >> config_input.txt'
+  - 'echo "60db1936-08f5-49e3-80dd-3f7dd51a4b32" >> config_input.txt'
   - 'angusme < config_input.txt'
   - 'cat ~/.angusdk/config.json'
 
-script: py.test --root=https://gate.angus.ai --client_id=7f5933d2-cd7c-11e4-9fe6-490467a5e114 --access_token=db19c01e-18e5-4fc2-8b81-7b3d1f44533b
+script: py.test --root=https://gate.angus.ai --client_id=58a8ac90-8b0d-11e6-ba22-0242ac110002 --access_token=60db1936-08f5-49e3-80dd-3f7dd51a4b32
