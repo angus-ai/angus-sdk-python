@@ -32,7 +32,7 @@ __status__ = "Production"
 
 def async_res(job):
     # Print the result of the job.
-    print job.result['faces']
+    print(job.result['faces'])
 
 def main():
     # Get the conn resource of Angus Cloud

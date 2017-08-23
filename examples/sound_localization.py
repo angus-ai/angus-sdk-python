@@ -89,7 +89,7 @@ while(True):
 
     job = service.process({'sound': open(WAVE_OUTPUT_FILENAME)})
 
-    print job.result
+    print(job.result)
 
 
 stream.stop_stream()

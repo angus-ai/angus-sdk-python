@@ -40,7 +40,7 @@ def main():
     job = service.process({'image': open('macgyver.jpg')})
 
     # Print the result of the job.
-    print job.result['faces']
+    print(job.result['faces'])
 
 if __name__ == '__main__':
     main()

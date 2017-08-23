@@ -43,4 +43,4 @@ def data():
         yield ({"timestamp": timestamp.isoformat()}, "image", img)
 
 for job in s.stream(data=data()):
-    print json.loads(job)
+    print(json.loads(job))

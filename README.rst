@@ -70,7 +70,7 @@ Here is a simple "Hello, world" example for Angus SDK (replace macgyver.jpg by y
      conn = angus.connect()
      service = conn.services.get_service('face_detection', version=1)
      job = service.process({'image': open('./macgyver.jpg')})
-     print job.result['faces']
+     print(job.result['faces'])
 
 
 Hello, world (asynchronous)
@@ -81,7 +81,7 @@ Here is the same simple example but with a non-blocking call to 'process'. The p
     import angus
 
     def f(job):
-        print job.result['faces']
+        print(job.result['faces'])
 
     conn = angus.connect()
     service = conn.services.get_service('face_detection', version=1)
