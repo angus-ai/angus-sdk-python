@@ -4,14 +4,19 @@ python:
   - '3.4'
   - '2.7'
 
-install: "pip install ."
+install: pip install .
 
 before_script:
-  - 'cd tests/'
-  - 'echo "https://gate.angus.ai" >> config_input.txt'
-  - 'echo "58a8ac90-8b0d-11e6-ba22-0242ac110002" >> config_input.txt'
-  - 'echo "60db1936-08f5-49e3-80dd-3f7dd51a4b32" >> config_input.txt'
-  - 'angusme < config_input.txt'
-  - 'cat ~/.angusdk/config.json'
+  - cd tests/
+  - echo "https://gate.angus.ai" >> config_input.txt
+  - echo "$CLIENT_ID" >> config_input.txt
+  - echo "$ACCESS_TOKEN" >> config_input.txt
+  - angusme < config_input.txt
+  - cat ~/.angusdk/config.json
 
-script: py.test --root=https://gate.angus.ai --client_id=58a8ac90-8b0d-11e6-ba22-0242ac110002 --access_token=60db1936-08f5-49e3-80dd-3f7dd51a4b32
+script: py.test --root=https://gate.angus.ai --client_id=$CLIENT_ID --access_token=$ACCESS_TOKEN
+
+env:
+  global:
+  - secure: iYi/2GWXf9q6LLFTjABE0jA/KNfjFwEbnAMGGGwOjZE/qTTcTOxC0+Wq5gUJklKj22N7xzlcq8VuVqGmChKS5Z4ErOnFQ2Ei8GW43lZtHyDyV9gCM90jWBBDaWLQlekvKsIphoNn7ZpHNx4lGAsSHjWC7dMZMNeq8Hp4wJJk7CA=
+  - secure: XmpPU6mpDN67s/EKXCOol5rgtGbW77szX4yFBNypcm5lQZmFdYApuycdM24vVgeQPLx5nLlG9ZJm7SGh0bwiMGas/3y4xHMCWzneeEDDjjkeYodX0AHkhFBXrMdFG/3JgMxu4uBKb52/Jo7K19B6USCresQNOwOP9vUok722JSk=
