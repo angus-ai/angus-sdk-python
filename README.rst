@@ -68,6 +68,8 @@ Hello, world
 
 Here is a simple "Hello, world" example for Angus SDK (replace macgyver.jpg by your own image with a face to detect):
 
+.. parsed-literal::
+
      import angus
 
      conn = angus.connect()
