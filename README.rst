@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/angus-ai/angus-sdk-python.svg?branch=master
+    :target: https://travis-ci.org/angus-ai/angus-sdk-python
+
 Angus Python SDK's documentation
 ================================
 
