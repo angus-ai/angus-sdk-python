@@ -12,11 +12,10 @@ before_script:
   - echo "$CLIENT_ID" >> config_input.txt
   - echo "$ACCESS_TOKEN" >> config_input.txt
   - angusme < config_input.txt
-  - cat ~/.angusdk/config.json
 
 script: py.test --root=https://gate.angus.ai --client_id=$CLIENT_ID --access_token=$ACCESS_TOKEN
 
 env:
   global:
-  - secure: iYi/2GWXf9q6LLFTjABE0jA/KNfjFwEbnAMGGGwOjZE/qTTcTOxC0+Wq5gUJklKj22N7xzlcq8VuVqGmChKS5Z4ErOnFQ2Ei8GW43lZtHyDyV9gCM90jWBBDaWLQlekvKsIphoNn7ZpHNx4lGAsSHjWC7dMZMNeq8Hp4wJJk7CA=
-  - secure: XmpPU6mpDN67s/EKXCOol5rgtGbW77szX4yFBNypcm5lQZmFdYApuycdM24vVgeQPLx5nLlG9ZJm7SGh0bwiMGas/3y4xHMCWzneeEDDjjkeYodX0AHkhFBXrMdFG/3JgMxu4uBKb52/Jo7K19B6USCresQNOwOP9vUok722JSk=
+  - secure: AGO2UX6bXeQLy1QMEJTv3EykOBHAARyeiWbGZgbiwmNcHgKN7uSza+SvnNQAzC7kJVmBOAhbuC1j5q2VtrBN1qPIUzprTkucPaE/ozYHqcsvM5qeiqqzT6DavA9PB+wmo//aspv6qd9wlf1fNx+eovClMUDt/dQTDPInlUVI5Ew=
+  - secure: eRE2kfMcaKtsiuxSGoN4HtvYghqY4iAj/vlOims8KD1UaKi0twN5EdywPpSixz7hR7W4x05dHTkFLgN+mzBy10LBfxSaWdt3M4nfwn5GlG1qmssnPpYEKGJQy5x9QJtnLpcx4tXoNSdX1VKg16NZzXS7k4CywsyZXxpbfoKsWMQ=
