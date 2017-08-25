@@ -325,6 +325,8 @@ class Service(Resource):
         parameters -- the job parameter (default {})
         async -- request an async job (default False)
         session -- a session object (default None)
+
+        Returns a Future object
         """
         if parameters is None:
             parameters = {}
