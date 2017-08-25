@@ -1,3 +1,22 @@
+Angus python SDK - Release Note v0.0.15
+=======================================
+
+Bug fixed
+---------
+
+* Fix compatibility with Python 3
+
+Features added
+--------------
+
+* New `process_async` method to process job asynchronously on the client side
+
+Deprecation
+-----------
+
+* The `callback` parameter in the `process` method has been deprecated, use `process_async`
+method instead
+
 Angus python SDK - Release Note v0.0.14
 =======================================
 
