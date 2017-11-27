@@ -27,6 +27,7 @@ import logging
 from six.moves.urllib import parse as urlparse
 import requests
 import requests_futures.sessions
+import requests.auth
 
 
 __updated__ = "2017-08-23"
@@ -222,7 +223,6 @@ class Collection(Resource):
 
         Arguments:
         parameters -- the resource creation parameters (default {})
-        callback -- a callback when resource is created
         resource_type -- The class of the new resource (default Resource)
         """
         attachments = []

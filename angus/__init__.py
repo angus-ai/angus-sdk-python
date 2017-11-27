@@ -21,6 +21,7 @@
 import logging
 import pkgutil
 import angus.client
+import angus.db_client
 
 LOGGER = logging.getLogger('AngusSDK')
 
