@@ -104,7 +104,10 @@ class Resource(object):
         res = self.conf.get(self.endpoint)
         res = res.result()
         res.raise_for_status()
-        self.representation = res.json()
+        try:
+            self.representation = res.json()
+        except ValueError:
+            self.representation = res.content
 
     def delete(self):
         """Delete the resource
