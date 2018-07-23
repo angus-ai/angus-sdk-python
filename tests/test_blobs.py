@@ -19,6 +19,8 @@
 
 import pytest
 import angus.client
+from requests.exceptions import HTTPError
+import six
 
 __updated__ = "2018-07-23"
 __author__ = "Gwennael Gate"
@@ -35,7 +37,19 @@ def root(server, client, token, verify):
     return angus.client.connect(
         url=server, client_id=client, access_token=token, verify=verify)
 
-def test_blob_lifecycle(root):
+def test_blob_create(root):
+    res = root.blobs.create(open(IMG_1, 'rb'))
+    res.fetch()
+    assert(type(res.representation) == six.binary_type)
+
+def test_blob_delete(root):
     res = root.blobs.create(open(IMG_1, 'rb'))
     res.delete()
 
+    deleted = False
+    try:
+        res.fetch()
+    except HTTPError as e:
+        deleted = True
+
+    assert(deleted)
