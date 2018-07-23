@@ -29,7 +29,7 @@ import requests
 import requests_futures.sessions
 
 
-__updated__ = "2017-08-23"
+__updated__ = "2018-07-23"
 __author__ = "Aurélien Moreau"
 __copyright__ = "Copyright 2015-2017, Angus.ai"
 __credits__ = ["Aurélien Moreau", "Gwennael Gate", "Raphaël Lumbroso"]
@@ -105,6 +105,14 @@ class Resource(object):
         res = res.result()
         res.raise_for_status()
         self.representation = res.json()
+
+    def delete(self):
+        """Delete the resource
+        """
+        res = self.conf.delete(self.endpoint)
+        res = res.result()
+        res.raise_for_status()
+
 
 
 def result_decorator(result_fn, resource_type, endpoint, conf):
