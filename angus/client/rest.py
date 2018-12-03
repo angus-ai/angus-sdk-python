@@ -289,12 +289,12 @@ class Service(Resource):
         self.default_session = None
         self.session_parameters = None
 
-    def process(self, parameters=None, async=False, session=None):
+    def process(self, parameters=None, is_async=False, session=None):
         """Create a job configurate with
 
         Arguments:
         parameters -- the job parameter (default {})
-        async -- request an async job (default False)
+        is_async -- request an async job (default False)
         session -- a session object (default None)
         """
         if parameters is None:
@@ -311,19 +311,19 @@ class Service(Resource):
         if session is not None:
             parameters['state'] = session.state()
 
-        parameters['async'] = async
+        parameters['async'] = is_async
 
         job = self.jobs.create(
             parameters,
             resource_type=Job)
         return job
 
-    def process_async(self, parameters=None, async=False, session=None):
+    def process_async(self, parameters=None, is_async=False, session=None):
         """Create an asynchronous job configurate with
 
         Arguments:
         parameters -- the job parameter (default {})
-        async -- request an async job (default False)
+        is_async -- request an async job (default False)
         session -- a session object (default None)
 
         Returns a Future object
@@ -342,7 +342,7 @@ class Service(Resource):
         if session is not None:
             parameters['state'] = session.state()
 
-        parameters['async'] = async
+        parameters['async'] = is_async
 
         fut = self.jobs.create_async(
             parameters,
